@@ -17,20 +17,6 @@ func (eng *IntoolsEngine) NewConnector(group string, name string) *Connector {
 	return &Connector{group, name, nil, 15}
 }
 
-func (c *Connector) Init(image string, timeout int, cmd []string) {
-	c.ContainerConfig = &dockerclient.ContainerConfig{
-		Image:        image,
-		Cmd:          cmd,
-		AttachStdin:  false,
-		AttachStdout: false,
-		AttachStderr: false,
-		Tty:          false,
-	}
-	if timeout != 0 {
-		c.Timeout = timeout
-	}
-}
-
 func (e *IntoolsEngine) Exec(connector *Connector) (*Executor, error) {
 	executor := &Executor{}
 
