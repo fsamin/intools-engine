@@ -49,28 +49,24 @@ func newApp() *cli.App {
 	app.Commands = []cli.Command{
 		cli.Command{
 			Name:        "daemon",
-			Aliases:     []string{"d"},
 			Usage:       "Run intools engine as a Daemon",
 			Description: "Daemon",
 			Action:      daemonAction,
 		},
 		cli.Command{
 			Name:        "test",
-			Aliases:     []string{"t"},
 			Usage:       "Test your connector over intools engine",
 			Description: "Test",
 			Action:      testAction,
 		},
 		cli.Command{
 			Name:        "run",
-			Aliases:     []string{"r"},
 			Usage:       "Run your connector over intools engine",
 			Description: "Run",
 			Action:      runAction,
 		},
 		cli.Command{
 			Name:        "publish",
-			Aliases:     []string{"p"},
 			Usage:       "Publish your connector on intools engine",
 			Description: "Daemon",
 			Action:      publishAction,

@@ -27,7 +27,18 @@ func daemonAction(c *cli.Context) {
 	port := c.GlobalInt("port")
 	debug := c.GlobalBool("debug")
 	Trace.Println("Starting Intools-Engine as daemon")
-	d := newDaemon(port, debug)
+
+	dockerClient, dockerHost, err := getDockerCient(c)
+	if err != nil {
+		os.Exit(1)
+	}
+
+	redisClient, err := getRedisClient(c)
+	if err != nil {
+		os.Exit(1)
+	}
+
+	d := newDaemon(port, debug, dockerClient, dockerHost, redisClient)
 	d.setRoutes()
 	d.run()
 }

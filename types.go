@@ -18,36 +18,25 @@ type Connector struct {
 	Name            string
 	ContainerConfig *dockerclient.ContainerConfig
 	Timeout         int
+	Refresh         int
 }
 
 func (c *Connector) Init(image string, timeout int, cmd []string) {
-    c.ContainerConfig = &dockerclient.ContainerConfig{
-        Image:        image,
-        Cmd:          cmd,
-        AttachStdin:  false,
-        AttachStdout: false,
-        AttachStderr: false,
-        Tty:          false,
-    }
-    if timeout != 0 {
-        c.Timeout = timeout
-    }
+	c.ContainerConfig = &dockerclient.ContainerConfig{
+		Image:        image,
+		Cmd:          cmd,
+		AttachStdin:  false,
+		AttachStdout: false,
+		AttachStderr: false,
+		Tty:          false,
+	}
+	if timeout != 0 {
+		c.Timeout = timeout
+	}
 }
 
 func (c *Connector) GetContainerName() string {
 	return c.Group + "-" + c.Name
-}
-
-func (c *Connector) GetKey() string {
-	return "intools:groups:" + c.Group + ":connectors:" + c.Name
-}
-
-func (c *Connector) GetExecutorKey(e *Executor) string {
-	return "intools:groups:" + c.Group + ":connectors:" + c.Name + ":executors"
-}
-
-func (c *Connector) GetResultKey(e *Executor) string {
-	return "intools:groups:" + c.Group + ":connectors:" + c.Name + ":results"
 }
 
 func (c *Connector) GetJSON() string {
@@ -58,8 +47,6 @@ func (c *Connector) GetJSON() string {
 	}
 	return string(b[:])
 }
-
-
 
 type Executor struct {
 	ContainerId string

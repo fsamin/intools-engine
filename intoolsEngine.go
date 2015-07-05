@@ -14,7 +14,7 @@ func NewIntoolsEngine(client dockerclient.Client, host string, redis redis.Clien
 }
 
 func (eng *IntoolsEngine) NewConnector(group string, name string) *Connector {
-	return &Connector{group, name, nil, 15}
+	return &Connector{group, name, nil, 15, 60}
 }
 
 func (e *IntoolsEngine) Exec(connector *Connector) (*Executor, error) {
