@@ -5,7 +5,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/samalba/dockerclient"
 	"gopkg.in/redis.v3"
-	"strings"
 )
 
 type Daemon struct {
@@ -29,24 +28,23 @@ func newDaemon(port int, debug bool, dockerClient *dockerclient.DockerClient, do
 }
 
 func (d *Daemon) run() {
-    d.Engine.Run(fmt.Sprintf("0.0.0.0:%d", d.Port))
+	d.Engine.Run(fmt.Sprintf("0.0.0.0:%d", d.Port))
 }
 
 func (d *Daemon) setRoutes() {
 	d.Engine.GET("/groups", d.getGroups)
-    d.Engine.GET("/groups/:group/connectors", d.getConnectors)
+
+	allGroupRouter := d.Engine.Group("/groups/")
+	{
+		allGroupRouter.GET("", d.getGroups)
+
+		onGroupRouteur := allGroupRouter.Group("/:group")
+		{
+			onGroupRouteur.GET("", d.getGroup)
+			onGroupRouteur.POST("", d.postGroup)
+			onGroupRouteur.DELETE("", d.deleteGroup)
+			onGroupRouteur.GET("/connectors", d.getConnectors)
+		}
+	}
+
 }
-
-func (d *Daemon) getGroups(c *gin.Context) {
-    groups := d.Intools.getGroups()
-    c.String(200, "-> %s", strings.Join(groups, ";"))
-}
-
-func (d *Daemon) getConnectors(c *gin.Context) {
-    group := c.Param("group")
-    connectors := d.Intools.getConnectors(group)
-    c.String(200, "-> %s", strings.Join(connectors, ";"))
-}
-
-
-
