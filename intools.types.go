@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"github.com/robfig/cron"
 	"github.com/samalba/dockerclient"
 	"gopkg.in/redis.v3"
 	"time"
@@ -11,28 +12,16 @@ type IntoolsEngine struct {
 	DockerClient dockerclient.Client
 	DockerHost   string
 	RedisClient  redis.Client
+	Cron         *cron.Cron
 }
 
 type Connector struct {
+	Engine          *IntoolsEngine
 	Group           string
 	Name            string
 	ContainerConfig *dockerclient.ContainerConfig
 	Timeout         int
 	Refresh         int
-}
-
-func (c *Connector) Init(image string, timeout int, cmd []string) {
-	c.ContainerConfig = &dockerclient.ContainerConfig{
-		Image:        image,
-		Cmd:          cmd,
-		AttachStdin:  false,
-		AttachStdout: false,
-		AttachStderr: false,
-		Tty:          false,
-	}
-	if timeout != 0 {
-		c.Timeout = timeout
-	}
 }
 
 func (c *Connector) GetContainerName() string {

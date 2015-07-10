@@ -4,17 +4,40 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/samalba/dockerclient"
-	"gopkg.in/redis.v3"
 	"sync"
 	"time"
 )
 
-func NewIntoolsEngine(client dockerclient.Client, host string, redis redis.Client) *IntoolsEngine {
-	return &IntoolsEngine{client, host, redis}
+func (eng *IntoolsEngine) NewConnector(group string, name string) *Connector {
+	conn := &Connector{eng, group, name, nil, 15, 60}
+	return conn
 }
 
-func (eng *IntoolsEngine) NewConnector(group string, name string) *Connector {
-	return &Connector{group, name, nil, 15, 60}
+func (c *Connector) Init(image string, timeout int, refresh int, cmd []string) {
+	c.ContainerConfig = &dockerclient.ContainerConfig{
+		Image:        image,
+		Cmd:          cmd,
+		AttachStdin:  false,
+		AttachStdout: false,
+		AttachStderr: false,
+		Tty:          false,
+	}
+	if timeout != 0 {
+		c.Timeout = timeout
+	}
+	if refresh != 0 {
+		c.Refresh = refresh
+	}
+	if c.Engine.Cron != nil {
+		crontab := fmt.Sprintf("@every %sm", c.Refresh)
+		Debug.Printf("Schedule %s:%s %s", c.Group, c.Name, crontab)
+		c.Engine.Cron.AddJob(crontab, c)
+	}
+}
+
+func (c *Connector) Run() {
+	Debug.Printf("Run Connector %s:%s", c.Group, c.Name)
+	c.Engine.Exec(c)
 }
 
 func (e *IntoolsEngine) Exec(connector *Connector) (*Executor, error) {
