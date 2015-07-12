@@ -6,18 +6,18 @@ import (
 )
 
 func (d *Daemon) getGroups(c *gin.Context) {
-	groups := d.Intools.getGroups()
+	groups := d.Intools.GetGroups()
 	c.String(200, "-> %s", strings.Join(groups, ";"))
 }
 
 func (d *Daemon) getGroup(c *gin.Context) {
-	groups := d.Intools.getGroups()
+	groups := d.Intools.GetGroups()
 	c.String(200, "-> %s", strings.Join(groups, ";"))
 }
 
 func (d *Daemon) postGroup(c *gin.Context) {
 	group := c.Param("group")
-	created, err := d.Intools.createGroup(group)
+	created, err := d.Intools.CreateGroup(group)
 	if err != nil {
 		c.String(500, err.Error())
 	} else {
@@ -31,7 +31,7 @@ func (d *Daemon) postGroup(c *gin.Context) {
 
 func (d *Daemon) deleteGroup(c *gin.Context) {
 	group := c.Param("group")
-	err := d.Intools.deleteGroup(group)
+	err := d.Intools.DeleteGroup(group)
 	if err != nil {
 		c.String(500, err.Error())
 	} else {

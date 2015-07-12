@@ -13,26 +13,33 @@ func (eng *IntoolsEngine) NewConnector(group string, name string) *Connector {
 	return conn
 }
 
+func  (c *Connector) InitSchedule() {
+    if c.Engine.Cron != nil {
+        crontab := fmt.Sprintf("@every %sm", c.Refresh)
+        Debug.Printf("Schedule %s:%s %s", c.Group, c.Name, crontab)
+        c.Engine.Cron.AddJob(crontab, c)
+    }
+}
+
 func (c *Connector) Init(image string, timeout int, refresh int, cmd []string) {
-	c.ContainerConfig = &dockerclient.ContainerConfig{
-		Image:        image,
-		Cmd:          cmd,
-		AttachStdin:  false,
-		AttachStdout: false,
-		AttachStderr: false,
-		Tty:          false,
-	}
+	if c.ContainerConfig == nil {
+        c.ContainerConfig = &dockerclient.ContainerConfig{
+            Image:        image,
+            Cmd:          cmd,
+            AttachStdin:  false,
+            AttachStdout: false,
+            AttachStderr: false,
+            Tty:          false,
+        }
+    }
+
 	if timeout != 0 {
 		c.Timeout = timeout
 	}
 	if refresh != 0 {
 		c.Refresh = refresh
 	}
-	if c.Engine.Cron != nil {
-		crontab := fmt.Sprintf("@every %sm", c.Refresh)
-		Debug.Printf("Schedule %s:%s %s", c.Group, c.Name, crontab)
-		c.Engine.Cron.AddJob(crontab, c)
-	}
+    c.InitSchedule()
 }
 
 func (c *Connector) Run() {
@@ -44,7 +51,7 @@ func (e *IntoolsEngine) Exec(connector *Connector) (*Executor, error) {
 	executor := &Executor{}
 
 	//Saving connector to redis
-	go e.saveConnector(connector)
+	go e.SaveConnector(connector)
 
 	//Get all containers
 	containers, err := e.DockerClient.ListContainers(true, false, "")
@@ -183,7 +190,7 @@ func (e *IntoolsEngine) Exec(connector *Connector) (*Executor, error) {
 	}
 
 	//Save result to redis
-	defer e.saveExecutor(connector, executor)
+	defer e.SaveExecutor(connector, executor)
 
 	return executor, nil
 }
