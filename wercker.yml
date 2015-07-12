@@ -11,24 +11,13 @@ dev:
 build:
   steps:
     - script:
-        name: go get codegangsta/cli
+        name: go get
         code: |
+          go version
           go get -u "github.com/codegangsta/cli"
-    - script:
-        name: go get gin-gonic/gin
-        code: |
           go get -u "github.com/gin-gonic/gin"
-    - script:
-        name: go get samalba/dockerclient
-        code: |
           go get -u "github.com/samalba/dockerclient"
-    - script:
-        name: go get redis.v3
-        code: |
           go get -u "gopkg.in/redis.v3"
-    - script:
-        name: go get robfig/cron
-        code: |
           go get -u "github.com/robfig/cron"
     - script:
         name: go build
