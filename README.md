@@ -1,5 +1,7 @@
 # intools-engine
 
+[![wercker status](https://app.wercker.com/status/f3795ac31ee708a4ca07500d98870470/m "wercker status")](https://app.wercker.com/project/bykey/f3795ac31ee708a4ca07500d98870470)
+
 ## Development Dependencies
 ````
 go get -u "github.com/codegangsta/cli"
