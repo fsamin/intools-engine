@@ -51,7 +51,9 @@ func RedisSaveConnector(r *redis.Client, c *Connector) error {
 	Debug.Printf("Saving %s to redis", c.Group)
 	multi := r.Multi()
 	_, err := multi.Exec(func() error {
+		multi.LRem(GetRedisGroupsKey(), 0, c.Group)
 		multi.LPush(GetRedisGroupsKey(), c.Group)
+		multi.LRem(GetRedisConnectorsKey(c), 0, c.Name)
 		multi.LPush(GetRedisConnectorsKey(c), c.Name)
 		multi.Set(GetRedisConnectorKey(c), c.GetJSON(), 0)
 		return nil

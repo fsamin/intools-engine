@@ -23,15 +23,15 @@ func newDaemon(port int, debug bool, dockerClient *dockerclient.DockerClient, do
 	}
 	engine := gin.Default()
 	cron := cron.New()
-    Intools = &IntoolsEngine{dockerClient, dockerHost, *redisClient, cron}
+	Intools = &IntoolsEngine{dockerClient, dockerHost, *redisClient, cron}
 	daemon := &Daemon{port, engine, debug}
 	return daemon
 }
 
 func (d *Daemon) run() {
 	go func() {
-        Intools.Reload()
-        Intools.Cron.Start()
+		Intools.Reload()
+		Intools.Cron.Start()
 	}()
 	d.Engine.Run(fmt.Sprintf("0.0.0.0:%d", d.Port))
 }
