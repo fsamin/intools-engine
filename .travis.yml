@@ -1,6 +1,8 @@
 language: go
 
-go: tip
+go:
+    - 1.4
+    - tip
 
 install:
     - go get -u "github.com/codegangsta/cli"
