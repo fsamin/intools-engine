@@ -11,13 +11,20 @@ dev:
 build:
   steps:
     - script:
-        name: go get
+        name: go get codegangsta/cli
         code: |
-          cd $WERCKER_SOURCE_DIR
-          go version
           go get -u "github.com/codegangsta/cli"
+    - script:
+        name: go get gin-gonic/gin
+        code: |
           go get -u "github.com/gin-gonic/gin"
+    - script:
+        name: go get samalba/dockerclient
+        code: |
           go get -u "github.com/samalba/dockerclient"
+    - script:
+        name: go get redis.v3
+        code: |
           go get -u "gopkg.in/redis.v3"
     - script:
         name: go build
