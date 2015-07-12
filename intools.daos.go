@@ -30,12 +30,12 @@ func (e *IntoolsEngine) SaveExecutor(c *Connector, exec *Executor) {
 }
 
 func (e *IntoolsEngine) GetConnector(group string, connector string) (*Connector, error) {
-    conn, err := RedisGetConnector(&e.RedisClient, group, connector)
-    if err != nil {
-        Error.Printf("Error while loading %s:%s to Redis %s",group, connector, err.Error())
-        return nil, err
-    }
-    return conn, nil
+	conn, err := RedisGetConnector(&e.RedisClient, group, connector)
+	if err != nil {
+		Error.Printf("Error while loading %s:%s to Redis %s", group, connector, err.Error())
+		return nil, err
+	}
+	return conn, nil
 }
 
 func (e *IntoolsEngine) GetConnectors(group string) []string {

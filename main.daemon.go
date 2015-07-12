@@ -12,7 +12,6 @@ type Daemon struct {
 	Port      int
 	Engine    *gin.Engine
 	DebugMode bool
-	Intools   *IntoolsEngine
 }
 
 func newDaemon(port int, debug bool, dockerClient *dockerclient.DockerClient, dockerHost string, redisClient *redis.Client) *Daemon {
@@ -24,12 +23,15 @@ func newDaemon(port int, debug bool, dockerClient *dockerclient.DockerClient, do
 	}
 	engine := gin.Default()
 	cron := cron.New()
-	intools := &IntoolsEngine{dockerClient, dockerHost, *redisClient, cron}
-	daemon := &Daemon{port, engine, debug, intools}
+    Intools = &IntoolsEngine{dockerClient, dockerHost, *redisClient, cron}
+	daemon := &Daemon{port, engine, debug}
 	return daemon
 }
 
 func (d *Daemon) run() {
+	go func() {
+        Intools.Reload()
+        Intools.Cron.Start()
+	}()
 	d.Engine.Run(fmt.Sprintf("0.0.0.0:%d", d.Port))
-	d.Intools.Cron.Start()
 }

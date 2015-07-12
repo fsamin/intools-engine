@@ -75,10 +75,11 @@ func runAction(c *cli.Context) {
 	cmd = cmd[4:]
 	Debug.Println("Launching " + image + " " + strings.Join(cmd, " "))
 
-	intoolsEngine := &IntoolsEngine{dockerClient, host, *redisClient, nil}
-	connector := intoolsEngine.NewConnector(group, conn)
+	Intools = &IntoolsEngine{dockerClient, host, *redisClient, nil}
+	connector := Intools.NewConnector(group, conn)
 	connector.Init(image, timeout, 0, cmd)
-	executor, err := intoolsEngine.Exec(connector)
+    Intools.InitSchedule(connector)
+	executor, err := Intools.Exec(connector)
 	if err != nil {
 		os.Exit(3)
 	}

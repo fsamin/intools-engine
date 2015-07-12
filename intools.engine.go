@@ -9,29 +9,50 @@ import (
 )
 
 func (eng *IntoolsEngine) NewConnector(group string, name string) *Connector {
-	conn := &Connector{eng, group, name, nil, 15, 60}
+	conn := &Connector{group, name, nil, 15, 60}
 	return conn
 }
 
-func  (c *Connector) InitSchedule() {
-    if c.Engine.Cron != nil {
-        crontab := fmt.Sprintf("@every %sm", c.Refresh)
-        Debug.Printf("Schedule %s:%s %s", c.Group, c.Name, crontab)
-        c.Engine.Cron.AddJob(crontab, c)
-    }
+func (eng *IntoolsEngine) Reload() {
+	groups := eng.GetGroups()
+	for _, group := range groups {
+		Trace.Printf("%s - Reloading group", group)
+		go func(group string, eng *IntoolsEngine) {
+			connectors := eng.GetConnectors(group)
+			for _, connector := range connectors {
+				Trace.Printf("%s:%s - Reloading connector", group, connector)
+				go func(group string, connector string, eng *IntoolsEngine) {
+					conn, err := eng.GetConnector(group, connector)
+					if err != nil {
+						Error.Printf("%s:%s - cannot reload")
+					} else {
+						eng.InitSchedule(conn)
+					}
+				}(group, connector, eng)
+			}
+		}(group, eng)
+	}
+}
+
+func (e *IntoolsEngine) InitSchedule(c *Connector) {
+	if e.Cron != nil {
+		crontab := fmt.Sprintf("@every %dm", c.Refresh)
+		Debug.Printf("Schedule %s:%s %s", c.Group, c.Name, crontab)
+		e.Cron.AddJob(crontab, c)
+	}
 }
 
 func (c *Connector) Init(image string, timeout int, refresh int, cmd []string) {
 	if c.ContainerConfig == nil {
-        c.ContainerConfig = &dockerclient.ContainerConfig{
-            Image:        image,
-            Cmd:          cmd,
-            AttachStdin:  false,
-            AttachStdout: false,
-            AttachStderr: false,
-            Tty:          false,
-        }
-    }
+		c.ContainerConfig = &dockerclient.ContainerConfig{
+			Image:        image,
+			Cmd:          cmd,
+			AttachStdin:  false,
+			AttachStdout: false,
+			AttachStderr: false,
+			Tty:          false,
+		}
+	}
 
 	if timeout != 0 {
 		c.Timeout = timeout
@@ -39,12 +60,12 @@ func (c *Connector) Init(image string, timeout int, refresh int, cmd []string) {
 	if refresh != 0 {
 		c.Refresh = refresh
 	}
-    c.InitSchedule()
 }
 
 func (c *Connector) Run() {
+	//TODO : Should not run error, or invalid connector ?
 	Debug.Printf("Run Connector %s:%s", c.Group, c.Name)
-	c.Engine.Exec(c)
+	Intools.Exec(c)
 }
 
 func (e *IntoolsEngine) Exec(connector *Connector) (*Executor, error) {

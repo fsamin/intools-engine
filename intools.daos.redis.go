@@ -29,22 +29,22 @@ func GetRedisResultKey(c *Connector, e *Executor) string {
 }
 
 func RedisGetConnector(r *redis.Client, group string, connector string) (*Connector, error) {
-    Debug.Printf("Loading %s:%s from redis", group, connector)
-    key := GetRedisGroupKey(group) + ":connectors:" + connector
-    cmd := r.Get(key)
-    jsonCmd := cmd.Val()
-    if cmd.Err() != nil {
-        Error.Fatalf("Redis command failed %s", cmd.Err())
-        return nil, cmd.Err()
-    }
-    c := &Connector{}
-    err := json.Unmarshal([]byte(jsonCmd), c)
-    if err != nil {
-        Error.Printf("JSON Unmarshall failed with following value")
-        Error.Print(jsonCmd)
-        return nil, err
-    }
-    return c, nil
+	Debug.Printf("Loading %s:%s from redis", group, connector)
+	key := GetRedisGroupKey(group) + ":connectors:" + connector
+	cmd := r.Get(key)
+	jsonCmd := cmd.Val()
+	if cmd.Err() != nil {
+		Error.Fatalf("Redis command failed %s", cmd.Err())
+		return nil, cmd.Err()
+	}
+	c := &Connector{}
+	err := json.Unmarshal([]byte(jsonCmd), c)
+	if err != nil {
+		Error.Printf("JSON Unmarshall failed with following value")
+		Error.Print(jsonCmd)
+		return nil, err
+	}
+	return c, nil
 }
 
 func RedisSaveConnector(r *redis.Client, c *Connector) error {

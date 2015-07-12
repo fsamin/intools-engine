@@ -11,6 +11,7 @@ var (
 	Trace   *log.Logger
 	Warning *log.Logger
 	Error   *log.Logger
+	Intools *IntoolsEngine
 )
 
 func InitLog(traceHandle io.Writer, infoHandle io.Writer, warningHandle io.Writer, errorHandle io.Writer, flag int) {

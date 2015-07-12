@@ -13,12 +13,12 @@ func (d *Daemon) setRoutes() {
 			oneGroupRouter.POST("", d.postGroup)
 			oneGroupRouter.DELETE("", d.deleteGroup)
 
-            oneGroupConnectorRouter := oneGroupRouter.Group("/connectors")
-            {
-                oneGroupConnectorRouter.GET("", d.getConnectors)
-                oneGroupConnectorRouter.GET("/:connector", d.getConnector)
-                oneGroupConnectorRouter.POST("/:connector", d.createConnector)
-            }
+			oneGroupConnectorRouter := oneGroupRouter.Group("/connectors")
+			{
+				oneGroupConnectorRouter.GET("", d.getConnectors)
+				oneGroupConnectorRouter.GET("/:connector", d.getConnector)
+				oneGroupConnectorRouter.POST("/:connector", d.createConnector)
+			}
 		}
 	}
 
