@@ -24,7 +24,7 @@ func newDaemon(port int, debug bool, dockerClient *dockerclient.DockerClient, do
 	}
 	engine := gin.Default()
 	cron := cron.New()
-	intools := &IntoolsEngine{dockerClient, dockerHost, *redisClient, cron}
+	intools := &IntoolsEngine{*dockerClient, dockerHost, *redisClient, cron}
 	daemon := &Daemon{port, engine, debug, intools}
 	return daemon
 }
