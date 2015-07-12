@@ -75,7 +75,7 @@ func runAction(c *cli.Context) {
 	cmd = cmd[4:]
 	Debug.Println("Launching " + image + " " + strings.Join(cmd, " "))
 	Warning.Printf("In command line, connector schedule is not available")
-	Intools = &IntoolsEngine{*dockerClient, host, *redisClient, nil}
+	Intools = &IntoolsEngine{dockerClient, host, *redisClient, nil}
 	connector := Intools.NewConnector(group, conn)
 	connector.Init(image, timeout, 0, cmd)
 	Intools.InitSchedule(connector)

@@ -9,7 +9,7 @@ import (
 )
 
 type IntoolsEngine struct {
-	DockerClient dockerclient.DockerClient
+	DockerClient *dockerclient.DockerClient
 	DockerHost   string
 	RedisClient  redis.Client
 	Cron         *cron.Cron
