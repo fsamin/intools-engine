@@ -1,0 +1,29 @@
+# The container definition we want to use for developing our app
+box: golang
+# Defining the dev pipeline
+dev:
+  steps:
+    - internal/watch:
+        code: |
+          go build ./...
+          ./source
+        reload: true
+build:
+  steps:
+    - script:
+        name: go get
+        code: |
+          cd $WERCKER_SOURCE_DIR
+          go version
+          go get -u "github.com/codegangsta/cli"
+          go get -u "github.com/gin-gonic/gin"
+          go get -u "github.com/samalba/dockerclient"
+          go get -u "gopkg.in/redis.v3"
+    - script:
+        name: go build
+        code: |
+          go build
+    - script:
+        name: go test
+        code: |
+          go test ./..
