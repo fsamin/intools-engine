@@ -16,7 +16,6 @@ type IntoolsEngine struct {
 }
 
 type Connector struct {
-	Engine          *IntoolsEngine
 	Group           string
 	Name            string
 	ContainerConfig *dockerclient.ContainerConfig
