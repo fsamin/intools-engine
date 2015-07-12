@@ -27,6 +27,10 @@ build:
         code: |
           go get -u "gopkg.in/redis.v3"
     - script:
+        name: go get robfig/cron
+        code: |
+          go get -u "github.com/robfig/cron"
+    - script:
         name: go build
         code: |
           go build
