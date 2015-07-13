@@ -5,8 +5,8 @@ dev:
   steps:
     - internal/watch:
         code: |
-          go build ./...
-          ./source
+          go build
+          ./
         reload: true
 build:
   steps:
@@ -26,4 +26,4 @@ build:
     - script:
         name: go test
         code: |
-          go test ./..
+          go test
