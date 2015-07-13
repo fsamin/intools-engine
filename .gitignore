@@ -26,3 +26,7 @@ _testmain.go
 .idea
 intools-engine
 intools-engine.iml
+
+_builds/
+_projects/
+_steps/
