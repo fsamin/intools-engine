@@ -2,13 +2,34 @@ package main
 
 import "fmt"
 
-func (e *IntoolsEngine) GetGroups() []string {
-	ret, err := RedisGetGroups(&e.RedisClient)
+func (e *IntoolsEngine) GetGroup(name string, withConnectors bool) *Group {
+	allGroups := e.GetGroups(withConnectors)
+	for _, g := range allGroups {
+		if g.Name == name {
+			return &g
+		}
+	}
+	return nil
+}
+
+func (e *IntoolsEngine) GetGroups(withConnectors bool) []Group {
+	groups, err := RedisGetGroups(&e.RedisClient)
 	if err != nil {
 		Error.Printf("Error while getting groups from Redis %s", err.Error())
 		return nil
 	}
-	return ret
+	allGroups := make([]Group, len(groups))
+	for i, g := range groups {
+		group := &Group{
+			Name: g,
+		}
+		if withConnectors {
+			connectors := e.GetConnectors(g)
+			group.Connectors = connectors
+		}
+		allGroups[i] = *group
+	}
+	return allGroups
 }
 
 func (e *IntoolsEngine) CreateGroup(group string) (bool, error) {
@@ -38,13 +59,22 @@ func (e *IntoolsEngine) GetConnector(group string, connector string) (*Connector
 	return conn, nil
 }
 
-func (e *IntoolsEngine) GetConnectors(group string) []string {
+func (e *IntoolsEngine) GetConnectors(group string) []Connector {
 	ret, err := RedisGetConnectors(&e.RedisClient, group)
 	if err != nil {
 		Error.Printf("Error while getting connectors for group %s from Redis %s", group, err.Error())
 		return nil
 	}
-	return ret
+	connectors := make([]Connector, len(ret))
+	for i, c := range ret {
+		conn, err := e.GetConnector(group, c)
+		if err != nil {
+			Warning.Printf("Unable to load %s:%s : %s", group, c, err)
+		} else {
+			connectors[i] = *conn
+		}
+	}
+	return connectors
 }
 
 func (e *IntoolsEngine) DeleteGroup(group string) error {

@@ -2,13 +2,12 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"strings"
 )
 
 func (d *Daemon) getConnectors(c *gin.Context) {
 	group := c.Param("group")
 	connectors := Intools.GetConnectors(group)
-	c.String(200, "-> %s", strings.Join(connectors, ";"))
+	c.JSON(200, connectors)
 }
 
 func (d *Daemon) getConnector(c *gin.Context) {
@@ -21,7 +20,7 @@ func (d *Daemon) getConnector(c *gin.Context) {
 	if err != nil {
 		c.String(404, err.Error())
 	} else {
-		c.String(200, conn.GetJSON())
+		c.JSON(200, conn)
 	}
 }
 
@@ -37,5 +36,5 @@ func (d *Daemon) createConnector(c *gin.Context) {
 	Intools.SaveConnector(&conn)
 	Intools.InitSchedule(&conn)
 
-	c.String(200, conn.GetJSON())
+	c.JSON(200, conn)
 }

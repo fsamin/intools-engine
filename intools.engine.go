@@ -14,23 +14,13 @@ func (eng *IntoolsEngine) NewConnector(group string, name string) *Connector {
 }
 
 func (eng *IntoolsEngine) Reload() {
-	groups := eng.GetGroups()
+	groups := eng.GetGroups(true)
 	for _, group := range groups {
-		Trace.Printf("%s - Reloading group", group)
-		go func(group string, eng *IntoolsEngine) {
-			connectors := eng.GetConnectors(group)
-			for _, connector := range connectors {
-				Trace.Printf("%s:%s - Reloading connector", group, connector)
-				go func(group string, connector string, eng *IntoolsEngine) {
-					conn, err := eng.GetConnector(group, connector)
-					if err != nil {
-						Error.Printf("%s:%s - cannot reload")
-					} else {
-						eng.InitSchedule(conn)
-					}
-				}(group, connector, eng)
-			}
-		}(group, eng)
+		Trace.Printf("%s - Reloading group", group.Name)
+		for _, connector := range group.Connectors {
+			Trace.Printf("%s:%s - Reloading connector", group.Name, connector.Name)
+			eng.InitSchedule(&connector)
+		}
 	}
 }
 

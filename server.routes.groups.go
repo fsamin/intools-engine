@@ -2,17 +2,21 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"strings"
 )
 
 func (d *Daemon) getGroups(c *gin.Context) {
-	groups := Intools.GetGroups()
-	c.String(200, "-> %s", strings.Join(groups, ";"))
+	groups := Intools.GetGroups(false)
+	c.JSON(200, groups)
 }
 
 func (d *Daemon) getGroup(c *gin.Context) {
-	groups := Intools.GetGroups()
-	c.String(200, "-> %s", strings.Join(groups, ";"))
+	group := c.Param("group")
+	g := Intools.GetGroup(group, false)
+	if g == nil {
+		c.String(404, "")
+	} else {
+		c.JSON(200, g)
+	}
 }
 
 func (d *Daemon) postGroup(c *gin.Context) {

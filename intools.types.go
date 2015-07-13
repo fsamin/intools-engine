@@ -15,12 +15,17 @@ type IntoolsEngine struct {
 	Cron         *cron.Cron
 }
 
+type Group struct {
+	Name       string      `json:"name"`
+	Connectors []Connector `json:"connectors,omitempty"`
+}
+
 type Connector struct {
-	Group           string
-	Name            string
-	ContainerConfig *dockerclient.ContainerConfig
-	Timeout         int
-	Refresh         int
+	Group           string                        `json:"group"`
+	Name            string                        `json:"name"`
+	ContainerConfig *dockerclient.ContainerConfig `json:"config,omitempty"`
+	Timeout         int                           `json:"timeout,omitempty"`
+	Refresh         int                           `json:"refresh,omitempty"`
 }
 
 func (c *Connector) GetContainerName() string {
