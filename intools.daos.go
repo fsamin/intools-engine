@@ -1,6 +1,7 @@
 package main
 
 import "fmt"
+import "encoding/json"
 
 func (e *IntoolsEngine) GetGroup(name string, withConnectors bool) *Group {
 	allGroups := e.GetGroups(withConnectors)
@@ -48,6 +49,22 @@ func (e *IntoolsEngine) SaveExecutor(c *Connector, exec *Executor) {
 	if err != nil {
 		Error.Printf("Error while saving to Redis %s", err.Error())
 	}
+}
+
+func (e *IntoolsEngine) GetLastConnectorExecutor(c *Connector) *Executor {
+	sExecutor, err := RedisGetLastExecutor(&e.RedisClient, c)
+	if err != nil {
+		Error.Printf("Cannot load last executor %s:%s from Redis", c.Group, c.Name)
+		return nil
+	}
+	executor := &Executor{}
+	err = json.Unmarshal([]byte(sExecutor), executor)
+	if err != nil {
+		Error.Printf("Cannot parse last executor %s:%s", c.Group, c.Name)
+		Error.Printf(err.Error())
+		return nil
+	}
+	return executor
 }
 
 func (e *IntoolsEngine) GetConnector(group string, connector string) (*Connector, error) {

@@ -18,6 +18,9 @@ func (d *Daemon) setRoutes() {
 				oneGroupConnectorRouter.GET("", d.getConnectors)
 				oneGroupConnectorRouter.GET("/:connector", d.getConnector)
 				oneGroupConnectorRouter.POST("/:connector", d.createConnector)
+				oneGroupConnectorRouter.GET("/:connector/refresh", d.execConnector)
+				oneGroupConnectorRouter.GET("/:connector/result", d.getConnectorResult)
+				oneGroupConnectorRouter.GET("/:connector/exec", d.getConnectorExecutor)
 			}
 		}
 	}

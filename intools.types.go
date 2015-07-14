@@ -23,7 +23,7 @@ type Group struct {
 type Connector struct {
 	Group           string                        `json:"group"`
 	Name            string                        `json:"name"`
-	ContainerConfig *dockerclient.ContainerConfig `json:"config,omitempty"`
+	ContainerConfig *dockerclient.ContainerConfig `json:"config"`
 	Timeout         int                           `json:"timeout,omitempty"`
 	Refresh         int                           `json:"refresh,omitempty"`
 }

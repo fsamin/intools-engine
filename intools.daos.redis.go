@@ -20,7 +20,7 @@ func GetRedisConnectorKey(c *Connector) string {
 	return "intools:groups:" + c.Group + ":connectors:" + c.Name
 }
 
-func GetRedisExecutorKey(c *Connector, e *Executor) string {
+func GetRedisExecutorKey(c *Connector) string {
 	return "intools:groups:" + c.Group + ":connectors:" + c.Name + ":executors"
 }
 
@@ -63,11 +63,19 @@ func RedisSaveConnector(r *redis.Client, c *Connector) error {
 
 func RedisSaveExecutor(r *redis.Client, c *Connector, exec *Executor) error {
 	Debug.Printf("Saving %s:%s to redis", c.GetContainerName(), exec.ContainerId)
-	cmd := r.LPush(GetRedisExecutorKey(c, exec), exec.GetJSON())
+	cmd := r.LPush(GetRedisExecutorKey(c), exec.GetJSON())
 	if exec.Valid {
 		_ = r.LPush(GetRedisResultKey(c, exec), exec.GetResult())
 	}
 	return cmd.Err()
+}
+
+func RedisGetLastExecutor(r *redis.Client, c *Connector) (string, error) {
+	cmd := r.LIndex(GetRedisExecutorKey(c), 0)
+	if cmd.Err() != nil {
+		return "", cmd.Err()
+	}
+	return cmd.Val(), nil
 }
 
 func RedisGetGroups(r *redis.Client) ([]string, error) {
