@@ -8,7 +8,7 @@ func newApp() *cli.App {
 	app.Flags = []cli.Flag{
 		cli.IntFlag{
 			Name:   "port, P",
-			Value:  8080,
+			Value:  8082,
 			Usage:  "Intools engine daemon port",
 			EnvVar: "INTOOLS_PORT",
 		},
