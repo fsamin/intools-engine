@@ -1,22 +1,23 @@
-package main
+package connectors
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/soprasteria/intools-engine/common/logs"
 )
 
-func (d *Daemon) getConnectors(c *gin.Context) {
+func ControllerGetConnectors(c *gin.Context) {
 	group := c.Param("group")
-	connectors := Intools.GetConnectors(group)
+	connectors := GetConnectors(group)
 	c.JSON(200, connectors)
 }
 
-func (d *Daemon) getConnector(c *gin.Context) {
+func ControllerGetConnector(c *gin.Context) {
 	group := c.Param("group")
 	connector := c.Param("connector")
 
-	Debug.Printf("Searching for %s:%s", group, connector)
+	logs.Debug.Printf("Searching for %s:%s", group, connector)
 
-	conn, err := Intools.GetConnector(group, connector)
+	conn, err := GetConnector(group, connector)
 	if err != nil {
 		c.String(404, err.Error())
 	} else {
@@ -24,17 +25,17 @@ func (d *Daemon) getConnector(c *gin.Context) {
 	}
 }
 
-func (d *Daemon) execConnector(c *gin.Context) {
+func ControllerExecConnector(c *gin.Context) {
 	group := c.Param("group")
 	connector := c.Param("connector")
 
-	Debug.Printf("Searching for %s:%s", group, connector)
+	logs.Debug.Printf("Searching for %s:%s", group, connector)
 
-	conn, err := Intools.GetConnector(group, connector)
+	conn, err := GetConnector(group, connector)
 	if err != nil {
 		c.String(404, err.Error())
 	} else {
-		executor, err := Intools.Exec(conn)
+		executor, err := Exec(conn)
 		if err != nil {
 			c.String(500, err.Error())
 		} else {
@@ -43,14 +44,14 @@ func (d *Daemon) execConnector(c *gin.Context) {
 	}
 }
 
-func (d *Daemon) getConnectorExecutor(c *gin.Context) {
+func ControllerGetConnectorExecutor(c *gin.Context) {
 	group := c.Param("group")
 	connector := c.Param("connector")
-	conn, err := Intools.GetConnector(group, connector)
+	conn, err := GetConnector(group, connector)
 	if err != nil {
 		c.String(404, err.Error())
 	} else {
-		exec := Intools.GetLastConnectorExecutor(conn)
+		exec := GetLastConnectorExecutor(conn)
 		if exec == nil {
 			c.String(404, "no executor found")
 		} else {
@@ -59,14 +60,14 @@ func (d *Daemon) getConnectorExecutor(c *gin.Context) {
 	}
 }
 
-func (d *Daemon) getConnectorResult(c *gin.Context) {
+func ControllerGetConnectorResult(c *gin.Context) {
 	group := c.Param("group")
 	connector := c.Param("connector")
-	conn, err := Intools.GetConnector(group, connector)
+	conn, err := GetConnector(group, connector)
 	if err != nil {
 		c.String(404, err.Error())
 	} else {
-		exec := Intools.GetLastConnectorExecutor(conn)
+		exec := GetLastConnectorExecutor(conn)
 		if exec == nil {
 			c.String(404, "no result found")
 		} else {
@@ -79,7 +80,7 @@ func (d *Daemon) getConnectorResult(c *gin.Context) {
 	}
 }
 
-func (d *Daemon) createConnector(c *gin.Context) {
+func ControllerCreateConnector(c *gin.Context) {
 	group := c.Param("group")
 	connector := c.Param("connector")
 
@@ -88,8 +89,8 @@ func (d *Daemon) createConnector(c *gin.Context) {
 	conn.Group = group
 	conn.Name = connector
 
-	Intools.SaveConnector(&conn)
-	Intools.InitSchedule(&conn)
+	SaveConnector(&conn)
+	InitSchedule(&conn)
 
 	c.JSON(200, conn)
 }

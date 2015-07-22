@@ -9,6 +9,7 @@ go get -u "github.com/gin-gonic/gin"
 go get -u "github.com/robfig/cron"
 go get -u "github.com/samalba/dockerclient"
 go get -u "gopkg.in/redis.v3"
+go get -u github.com/gorilla/websocket
 ````
 
 ## Environment Dependencies

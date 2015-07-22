@@ -1,8 +1,8 @@
-package main
+package cli
 
 import "github.com/codegangsta/cli"
 
-func newApp() *cli.App {
+func NewApp() *cli.App {
 	app := cli.NewApp()
 	app.Name = "intools"
 	app.Flags = []cli.Flag{
