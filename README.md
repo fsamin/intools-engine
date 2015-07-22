@@ -25,3 +25,19 @@ go get -u github.com/gorilla/websocket
  --redis-db "0"               Redis Database [$REDIS_DB]
  --debug 			          Debug mode [$INTOOLS_DEBUG]
 ````
+
+## How to use
+### Command line
+ - Run the server
+````
+ ./intools-engine daemin
+````
+
+ - Run a connector (it will register a group, a connector, its configuration, and run it once)
+     - Argument to pass are : docker image name, timeout for container execution, and the container commandline
+
+````
+ ./intools-engine run <groupName> <connectorName> debian:jessie 5 echo '{"value":"test value"}'
+````
+### REST Api
+ - TODO
