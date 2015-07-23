@@ -13,10 +13,10 @@ import (
 )
 
 func InitSchedule(c *Connector) {
-	if intools.Engine.Cron != nil {
+	if intools.Engine.GetCron() != nil {
 		crontab := fmt.Sprintf("@every %dm", c.Refresh)
 		logs.Debug.Printf("Schedule %s:%s %s", c.Group, c.Name, crontab)
-		intools.Engine.Cron.AddJob(crontab, c)
+		intools.Engine.GetCron().AddJob(crontab, c)
 	}
 }
 
@@ -27,7 +27,7 @@ func Exec(connector *Connector) (*executors.Executor, error) {
 	go SaveConnector(connector)
 
 	//Get all containers
-	containers, err := intools.Engine.DockerClient.ListContainers(true, false, "")
+	containers, err := intools.Engine.GetDockerClient().ListContainers(true, false, "")
 	if err != nil {
 		logs.Error.Println(err)
 		return nil, err
@@ -48,7 +48,7 @@ func Exec(connector *Connector) (*executors.Executor, error) {
 	//If it exists, remove it
 	if containerExists {
 		logs.Trace.Printf("Removing container %s [/%s]", previousContainerId[:11], connector.GetContainerName())
-		err := intools.Engine.DockerClient.RemoveContainer(previousContainerId, true, true)
+		err := intools.Engine.GetDockerClient().RemoveContainer(previousContainerId, true, true)
 		if err != nil {
 			logs.Error.Println("Cannot remove container " + previousContainerId[:11])
 			logs.Error.Println(err)
@@ -57,7 +57,7 @@ func Exec(connector *Connector) (*executors.Executor, error) {
 	}
 
 	//Create container
-	ContainerId, err := intools.Engine.DockerClient.CreateContainer(connector.ContainerConfig, connector.GetContainerName())
+	ContainerId, err := intools.Engine.GetDockerClient().CreateContainer(connector.ContainerConfig, connector.GetContainerName())
 	if err != nil {
 		logs.Error.Println("Cannot create container " + connector.GetContainerName())
 		logs.Error.Println(err)
@@ -65,7 +65,7 @@ func Exec(connector *Connector) (*executors.Executor, error) {
 	}
 	//Save the short ContainerId
 	executor.ContainerId = ContainerId[:11]
-	executor.Host = intools.Engine.DockerHost
+	executor.Host = intools.Engine.GetDockerHost()
 
 	logs.Trace.Printf("%s [/%s] successfully created", executor.ContainerId, connector.GetContainerName())
 	hostConfig := &dockerclient.HostConfig{}
@@ -75,7 +75,7 @@ func Exec(connector *Connector) (*executors.Executor, error) {
 	wg.Add(1)
 
 	//Start the container
-	err = intools.Engine.DockerClient.StartContainer(ContainerId, hostConfig)
+	err = intools.Engine.GetDockerClient().StartContainer(ContainerId, hostConfig)
 	if err != nil {
 		logs.Error.Println("Cannot start container " + executor.ContainerId)
 		logs.Error.Println(err)
@@ -85,12 +85,12 @@ func Exec(connector *Connector) (*executors.Executor, error) {
 	logs.Trace.Printf("%s [/%s] successfully started", executor.ContainerId, connector.GetContainerName())
 	logs.Debug.Println(executor.ContainerId + " will be stopped after " + fmt.Sprint(connector.Timeout) + " seconds")
 	//Trigger stop of the container after the timeout
-	intools.Engine.DockerClient.StopContainer(ContainerId, connector.Timeout)
+	intools.Engine.GetDockerClient().StopContainer(ContainerId, connector.Timeout)
 
 	//Wait for the end of the execution of the container
 	for {
 		//Each time inspect the container
-		inspect, err := intools.Engine.DockerClient.InspectContainer(ContainerId)
+		inspect, err := intools.Engine.GetDockerClient().InspectContainer(ContainerId)
 		if err != nil {
 			logs.Error.Println("Cannot inpect container " + executor.ContainerId)
 			logs.Error.Println(err)
@@ -135,8 +135,8 @@ func Exec(connector *Connector) (*executors.Executor, error) {
 	}
 
 	//Get the stdout and stderr
-	logsStdOutReader, err := intools.Engine.DockerClient.ContainerLogs(ContainerId, logStdOutOptions)
-	logsStdErrReader, err := intools.Engine.DockerClient.ContainerLogs(ContainerId, logStdErrOptions)
+	logsStdOutReader, err := intools.Engine.GetDockerClient().ContainerLogs(ContainerId, logStdOutOptions)
+	logsStdErrReader, err := intools.Engine.GetDockerClient().ContainerLogs(ContainerId, logStdErrOptions)
 
 	if err != nil {
 		logs.Error.Println("-cannot read logs from server")

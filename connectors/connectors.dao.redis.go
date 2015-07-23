@@ -25,7 +25,7 @@ func GetRedisConnectorConfKey(g string, c string) string {
 }
 
 func RedisGetConnectors(group string) ([]string, error) {
-	r := &intools.Engine.RedisClient
+	r := intools.Engine.GetRedisClient()
 	key := fmt.Sprintf("intools:groups:%s:connectors", group)
 	len, err := r.LLen(key).Result()
 	if err != nil {
@@ -35,7 +35,7 @@ func RedisGetConnectors(group string) ([]string, error) {
 }
 
 func RedisGetConnector(group string, connector string) (*Connector, error) {
-	r := &intools.Engine.RedisClient
+    r := intools.Engine.GetRedisClient()
 	logs.Debug.Printf("Loading %s:%s from redis", group, connector)
 	key := GetRedisConnectorConfKey(group, connector)
 	cmd := r.Get(key)
@@ -55,7 +55,7 @@ func RedisGetConnector(group string, connector string) (*Connector, error) {
 }
 
 func RedisSaveConnector(c *Connector) error {
-	r := &intools.Engine.RedisClient
+	r := intools.Engine.GetRedisClient()
 	logs.Debug.Printf("Saving %s to redis", c.Group)
 	multi := r.Multi()
 	_, err := multi.Exec(func() error {
@@ -78,8 +78,8 @@ func GetRedisResultKey(c *Connector, e *executors.Executor) string {
 }
 
 func RedisSaveExecutor(c *Connector, exec *executors.Executor) error {
-	r := &intools.Engine.RedisClient
-	logs.Debug.Printf("Saving %s:%s to redis", c.GetContainerName(), exec.ContainerId)
+    r := intools.Engine.GetRedisClient()
+    logs.Debug.Printf("Saving %s:%s to redis", c.GetContainerName(), exec.ContainerId)
 	cmd := r.LPush(GetRedisExecutorKey(c), exec.GetJSON())
 	if exec.Valid {
 		_ = r.LPush(GetRedisResultKey(c, exec), exec.GetResult())
@@ -88,8 +88,8 @@ func RedisSaveExecutor(c *Connector, exec *executors.Executor) error {
 }
 
 func RedisGetLastExecutor(c *Connector) (string, error) {
-	r := &intools.Engine.RedisClient
-	cmd := r.LIndex(GetRedisExecutorKey(c), 0)
+    r := intools.Engine.GetRedisClient()
+    cmd := r.LIndex(GetRedisExecutorKey(c), 0)
 	if cmd.Err() != nil {
 		return "", cmd.Err()
 	}

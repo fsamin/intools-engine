@@ -10,16 +10,13 @@ dev:
         reload: true
 build:
   steps:
+    - setup-go-workspace:
+        package-dir: github.com/soprasteria/intools-engine
     - script:
         name: go get
         code: |
           go version
-          go get -u "github.com/codegangsta/cli"
-          go get -u "github.com/gin-gonic/gin"
-          go get -u "github.com/samalba/dockerclient"
-          go get -u "gopkg.in/redis.v3"
-          go get -u "github.com/robfig/cron"
-          go get -u "github.com/gorilla/websocket"
+          go get
     - script:
         name: go build
         code: |

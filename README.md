@@ -11,7 +11,6 @@ go get -u "github.com/samalba/dockerclient"
 go get -u "gopkg.in/redis.v3"
 go get -u github.com/gorilla/websocket
 ````
-
 ## Environment Dependencies
  - Docker Host (version 1.5 min)
  - Redis Host (version 2.8 min)
@@ -41,3 +40,17 @@ go get -u github.com/gorilla/websocket
 ````
 ### REST Api
  - TODO
+
+## Tests
+### Install Ginkgo
+````
+ go get github.com/onsi/ginkgo/ginkgo
+ go get github.com/onsi/gomega
+````
+
+This fetches ginkgo and installs the ginkgo executable under `$GOPATH/bin` – you’ll want that on your `$PATH`.
+
+### Run Tests suites
+````
+ginkgo groups
+````

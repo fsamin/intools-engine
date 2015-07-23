@@ -13,7 +13,7 @@ func GetRedisGroupKey(group string) string {
 }
 
 func RedisGetGroups() ([]string, error) {
-	r := &intools.Engine.RedisClient
+	r := intools.Engine.GetRedisClient()
 	len, err := r.LLen(GetRedisGroupsKey()).Result()
 	if err != nil {
 		return nil, err
@@ -22,7 +22,7 @@ func RedisGetGroups() ([]string, error) {
 }
 
 func RedisCreateGroup(group string) (bool, error) {
-	r := &intools.Engine.RedisClient
+	r := intools.Engine.GetRedisClient()
 	listGroup, err := RedisGetGroups()
 	if err != nil {
 		return false, err
@@ -41,7 +41,7 @@ func RedisCreateGroup(group string) (bool, error) {
 }
 
 func RedisDeleteGroup(group string) error {
-	r := &intools.Engine.RedisClient
+	r := intools.Engine.GetRedisClient()
 	keyGroup := fmt.Sprintf("intools:groups:%s:*", group)
 	evalKeys := make([]string, 0)
 	evalArgs := []string{keyGroup}
