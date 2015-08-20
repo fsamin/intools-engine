@@ -10,7 +10,8 @@ import (
 	"github.com/soprasteria/intools-engine/groups"
 	"github.com/soprasteria/intools-engine/intools"
 	"gopkg.in/redis.v3"
-)
+
+    "github.com/gin-gonic/contrib/expvar")
 
 type Daemon struct {
 	Port      int
@@ -41,6 +42,7 @@ func (d *Daemon) Run() {
 }
 
 func (d *Daemon) SetRoutes() {
+    d.Engine.GET("/debug/vars", expvar.Handler())
 	d.Engine.GET("/groups", groups.ControllerGetGroups)
 
 	allGroupRouter := d.Engine.Group("/groups/")

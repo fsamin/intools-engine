@@ -208,7 +208,7 @@ func (e *IntoolsEngineImpl) GetRedisClient() RedisWrapper {
 }
 
 func (e *IntoolsEngineImpl) GetCron() CronWrapper {
-	return e.GetCron()
+	return e.Cron
 }
 
 var (
