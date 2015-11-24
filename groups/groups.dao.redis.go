@@ -1,8 +1,8 @@
 package groups
 
-import "github.com/soprasteria/intools-engine/intools"
+import "github.com/fsamin/intools-engine/intools"
 import "fmt"
-import "github.com/soprasteria/intools-engine/common/logs"
+import "github.com/fsamin/intools-engine/common/logs"
 
 func GetRedisGroupsKey() string {
 	return "intools:groups"

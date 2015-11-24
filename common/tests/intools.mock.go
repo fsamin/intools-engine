@@ -2,7 +2,7 @@ package tests
 
 import (
 	"github.com/samalba/dockerclient"
-	"github.com/soprasteria/intools-engine/intools"
+	"github.com/fsamin/intools-engine/intools"
 )
 
 type IntoolsEngineMock struct {

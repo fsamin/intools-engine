@@ -3,9 +3,9 @@ package connectors
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/soprasteria/intools-engine/common/logs"
-	"github.com/soprasteria/intools-engine/executors"
-	"github.com/soprasteria/intools-engine/intools"
+	"github.com/fsamin/intools-engine/common/logs"
+	"github.com/fsamin/intools-engine/executors"
+	"github.com/fsamin/intools-engine/intools"
 )
 
 func GetRedisConnectorsKey(c *Connector) string {

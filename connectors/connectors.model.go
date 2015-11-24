@@ -3,8 +3,8 @@ package connectors
 import (
 	"encoding/json"
 	"github.com/samalba/dockerclient"
-	"github.com/soprasteria/intools-engine/common/logs"
-	"github.com/soprasteria/intools-engine/executors"
+	"github.com/fsamin/intools-engine/common/logs"
+	"github.com/fsamin/intools-engine/executors"
 )
 
 type Connector struct {

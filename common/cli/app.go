@@ -9,12 +9,12 @@ import (
 	"strconv"
 	"strings"
     "github.com/codegangsta/cli"
-    "github.com/soprasteria/intools-engine/common/logs"
-    "github.com/soprasteria/intools-engine/common/server"
-    "github.com/soprasteria/intools-engine/common/utils"
-    "github.com/soprasteria/intools-engine/connectors"
-    "github.com/soprasteria/intools-engine/intools"
-    "github.com/soprasteria/intools-engine/groups")
+    "github.com/fsamin/intools-engine/common/logs"
+    "github.com/fsamin/intools-engine/common/server"
+    "github.com/fsamin/intools-engine/common/utils"
+    "github.com/fsamin/intools-engine/connectors"
+    "github.com/fsamin/intools-engine/intools"
+    "github.com/fsamin/intools-engine/groups")
 
 func initLoggers(c *cli.Context) {
 	var debugLogger io.Writer

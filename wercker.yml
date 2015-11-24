@@ -11,7 +11,7 @@ dev:
 build:
   steps:
     - setup-go-workspace:
-        package-dir: github.com/soprasteria/intools-engine
+        package-dir: github.com/fsamin/intools-engine
     - script:
         name: go get
         code: |

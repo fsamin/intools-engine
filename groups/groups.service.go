@@ -1,8 +1,8 @@
 package groups
 
 import (
-	"github.com/soprasteria/intools-engine/common/logs"
-	"github.com/soprasteria/intools-engine/connectors"
+	"github.com/fsamin/intools-engine/common/logs"
+	"github.com/fsamin/intools-engine/connectors"
 )
 
 func Reload() {

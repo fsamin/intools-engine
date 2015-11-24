@@ -2,7 +2,7 @@ package connectors
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/soprasteria/intools-engine/common/logs"
+	"github.com/fsamin/intools-engine/common/logs"
 )
 
 func ControllerGetConnectors(c *gin.Context) {

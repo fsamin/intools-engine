@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/soprasteria/intools-engine/common/cli"
+	"github.com/fsamin/intools-engine/common/cli"
 	"os"
 )
 

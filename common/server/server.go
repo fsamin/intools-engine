@@ -5,10 +5,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/robfig/cron"
 	"github.com/samalba/dockerclient"
-	"github.com/soprasteria/intools-engine/common/logs"
-	"github.com/soprasteria/intools-engine/connectors"
-	"github.com/soprasteria/intools-engine/groups"
-	"github.com/soprasteria/intools-engine/intools"
+	"github.com/fsamin/intools-engine/common/logs"
+	"github.com/fsamin/intools-engine/connectors"
+	"github.com/fsamin/intools-engine/groups"
+	"github.com/fsamin/intools-engine/intools"
 	"gopkg.in/redis.v3"
 
     "github.com/gin-gonic/contrib/expvar")

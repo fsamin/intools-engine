@@ -7,7 +7,7 @@ import (
 	"errors"
 	"github.com/codegangsta/cli"
 	"github.com/samalba/dockerclient"
-	"github.com/soprasteria/intools-engine/common/logs"
+	"github.com/fsamin/intools-engine/common/logs"
 	"gopkg.in/redis.v3"
 	"io"
 	"io/ioutil"

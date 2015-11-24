@@ -4,11 +4,11 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/samalba/dockerclient/mockclient"
-	"github.com/soprasteria/intools-engine/common/tests"
+	"github.com/fsamin/intools-engine/common/tests"
 
 	"github.com/samalba/dockerclient"
-	"github.com/soprasteria/intools-engine/groups"
-	"github.com/soprasteria/intools-engine/intools"
+	"github.com/fsamin/intools-engine/groups"
+	"github.com/fsamin/intools-engine/intools"
 )
 
 var _ = Describe("Groups", func() {

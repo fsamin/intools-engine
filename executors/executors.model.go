@@ -2,7 +2,7 @@ package executors
 
 import (
 	"encoding/json"
-	"github.com/soprasteria/intools-engine/common/logs"
+	"github.com/fsamin/intools-engine/common/logs"
 	"time"
 )
 
