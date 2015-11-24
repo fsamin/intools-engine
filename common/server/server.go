@@ -11,7 +11,8 @@ import (
 	"github.com/fsamin/intools-engine/intools"
 	"gopkg.in/redis.v3"
 
-    "github.com/gin-gonic/contrib/expvar")
+    "github.com/gin-gonic/contrib/expvar"
+)
 
 type Daemon struct {
 	Port      int

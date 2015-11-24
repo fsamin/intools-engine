@@ -98,9 +98,9 @@ func runAction(c *cli.Context) {
 }
 
 func testAction(c *cli.Context) {
-
+	logs.Error.Println("Not yet implemented")
 }
 
 func publishAction(c *cli.Context) {
-
+	logs.Error.Println("Not yet implemented")
 }
