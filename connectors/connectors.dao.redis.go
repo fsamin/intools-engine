@@ -6,6 +6,8 @@ import (
 	"github.com/fsamin/intools-engine/common/logs"
 	"github.com/fsamin/intools-engine/executors"
 	"github.com/fsamin/intools-engine/intools"
+	"gopkg.in/redis.v3"
+	"errors"
 )
 
 func GetRedisConnectorsKey(c *Connector) string {
@@ -40,8 +42,11 @@ func RedisGetConnector(group string, connector string) (*Connector, error) {
 	key := GetRedisConnectorConfKey(group, connector)
 	cmd := r.Get(key)
 	jsonCmd := cmd.Val()
-	if cmd.Err() != nil {
-		logs.Error.Fatalf("Redis command failed %s", cmd.Err())
+	if cmd.Err() == redis.Nil {
+		logs.Error.Printf("Can't load connector %s/%s from redis", group, connector)
+		return nil, errors.New("Can't load connector " + group + "/" + connector + " from redis")
+	} else if cmd.Err() != nil {
+		logs.Error.Printf("Redis command failed %s", cmd.Err())
 		return nil, cmd.Err()
 	}
 	c := &Connector{}

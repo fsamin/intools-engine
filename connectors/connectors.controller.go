@@ -19,6 +19,7 @@ func ControllerGetConnector(c *gin.Context) {
 
 	conn, err := GetConnector(group, connector)
 	if err != nil {
+		logs.Debug.Printf("ici")
 		c.String(404, err.Error())
 	} else {
 		c.JSON(200, conn)
