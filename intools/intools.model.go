@@ -5,6 +5,8 @@ import (
     "github.com/robfig/cron"
 	"github.com/samalba/dockerclient"
 	"time"
+	"github.com/fsamin/intools-engine/common/utils"
+	"gopkg.in/redis.v3"
 )
 
 type IntoolsEngine interface {
@@ -204,6 +206,11 @@ func (e *IntoolsEngineImpl) GetDockerHost() string {
 }
 
 func (e *IntoolsEngineImpl) GetRedisClient() RedisWrapper {
+	if e.RedisClient.Ping().Result() != "PONG" {
+		e.RedisClient= utils.GetRedisClient(&redis.Options{
+
+		})
+	}
 	return e.RedisClient
 }
 

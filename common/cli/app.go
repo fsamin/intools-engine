@@ -40,7 +40,7 @@ func daemonAction(c *cli.Context) {
 		os.Exit(1)
 	}
 
-	redisClient, err := utils.GetRedisClient(c)
+	redisClient, err := utils.GetRedis(c)
 	if err != nil {
 		os.Exit(1)
 	}
@@ -58,7 +58,7 @@ func runAction(c *cli.Context) {
 		os.Exit(1)
 	}
 
-	redisClient, err := utils.GetRedisClient(c)
+	redisClient, err := utils.GetRedis(c)
 	if err != nil {
 		os.Exit(1)
 	}

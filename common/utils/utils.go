@@ -18,6 +18,10 @@ import (
 	"unicode/utf8"
 )
 
+var (
+	redisOptions *redis.Options
+)
+
 func StringTransform(s string) string {
 	v := make([]rune, 0, len(s))
 	for i, r := range s {
@@ -51,19 +55,27 @@ func ReadLogs(reader io.Reader) (string, error) {
 	return text, err
 }
 
-func GetRedisClient(c *cli.Context) (*redis.Client, error) {
-	client := redis.NewClient(&redis.Options{
+func GetRedis(c *cli.Context) (*redis.Client, error) {
+	redisOptions = &redis.Options{
 		Addr:     c.GlobalString("redis"),
 		Password: c.GlobalString("redis-password"),
 		DB:       int64(c.GlobalInt("redis-db")),
-	})
+	}
+
+	client, err  := GetRedisClient()
+
+	logs.Trace.Printf("Connected to Redis Host %s/%d", c.GlobalString("redis"), c.GlobalInt("redis-db"))
+	return client, err
+}
+
+func GetRedisClient() (*redis.Client, error) {
+	client := redis.NewClient(redisOptions)
 
 	_, err := client.Ping().Result()
 	if err != nil {
 		logs.Error.Println("Unable to connect to redis host")
 		return nil, err
 	}
-	logs.Trace.Printf("Connected to Redis Host %s/%d", c.GlobalString("redis"), c.GlobalInt("redis-db"))
 
 	return client, nil
 }
