@@ -6,7 +6,6 @@ import (
 	"github.com/samalba/dockerclient"
 	"time"
 	"github.com/fsamin/intools-engine/common/utils"
-	"gopkg.in/redis.v3"
 )
 
 type IntoolsEngine interface {
@@ -206,10 +205,13 @@ func (e *IntoolsEngineImpl) GetDockerHost() string {
 }
 
 func (e *IntoolsEngineImpl) GetRedisClient() RedisWrapper {
-	if e.RedisClient.Ping().Result() != "PONG" {
-		e.RedisClient= utils.GetRedisClient(&redis.Options{
-
-		})
+	pong,_ := e.RedisClient.Ping().Result()
+	if pong != "PONG" {
+		var err error
+		e.RedisClient, err = utils.GetRedisClient()
+		if err != nil {
+			panic(err)
+		}
 	}
 	return e.RedisClient
 }
