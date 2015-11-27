@@ -6,8 +6,8 @@ import (
 	"crypto/x509"
 	"errors"
 	"github.com/codegangsta/cli"
-	"github.com/samalba/dockerclient"
 	"github.com/fsamin/intools-engine/common/logs"
+	"github.com/samalba/dockerclient"
 	"gopkg.in/redis.v3"
 	"io"
 	"io/ioutil"
@@ -137,4 +137,23 @@ func GetDockerCient(c *cli.Context) (*dockerclient.DockerClient, string, error) 
 	logs.Debug.Println("Go Version:" + version.GoVersion)
 
 	return docker, host, err
+}
+
+func Contains(slice []string, item string) bool {
+	set := make(map[string]struct{}, len(slice))
+	for _, s := range slice {
+		set[s] = struct{}{}
+	}
+	_, ok := set[item]
+	return ok
+}
+
+func IndexOf(slice []string, item string) int {
+	r := -1
+	for i, str := range slice {
+		if str == item {
+			r = i
+		}
+	}
+	return r
 }

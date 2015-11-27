@@ -8,13 +8,14 @@ import (
 	"github.com/fsamin/intools-engine/common/utils"
 	"github.com/fsamin/intools-engine/executors"
 	"github.com/fsamin/intools-engine/intools"
+	"github.com/fsamin/intools-engine/common/websocket"
 	"sync"
 	"time"
 )
 
 func InitSchedule(c *Connector) {
 	if intools.Engine.GetCron() != nil {
-		crontab := fmt.Sprintf("@every %dm", c.Refresh)
+		crontab := fmt.Sprintf("@every %ds", c.Refresh)
 		logs.Debug.Printf("Schedule %s:%s %s", c.Group, c.Name, crontab)
 		intools.Engine.GetCron().AddJob(crontab, c)
 	}
@@ -161,6 +162,9 @@ func Exec(connector *Connector) (*executors.Executor, error) {
 			executor.Stderr = containerLogs
 		}
 	}
+
+	// Broadcast result to registered clients
+	websocket.Notify(connector.Group, executor.JsonStdout)
 
 	//Save result to redis
 	defer SaveExecutor(connector, executor)

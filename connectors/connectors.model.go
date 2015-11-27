@@ -20,7 +20,7 @@ type ConnectorRunner interface {
 }
 
 func NewConnector(group string, name string) *Connector {
-	conn := &Connector{group, name, nil, 15, 60}
+	conn := &Connector{group, name, nil, 15, 300}
 	return conn
 }
 

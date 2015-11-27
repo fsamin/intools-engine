@@ -9,6 +9,7 @@ import (
 	"github.com/fsamin/intools-engine/connectors"
 	"github.com/fsamin/intools-engine/groups"
 	"github.com/fsamin/intools-engine/intools"
+	"github.com/fsamin/intools-engine/common/websocket"
 	"gopkg.in/redis.v3"
 
     "github.com/gin-gonic/contrib/expvar"
@@ -21,13 +22,19 @@ type Daemon struct {
 }
 
 func NewDaemon(port int, debug bool, dockerClient *dockerclient.DockerClient, dockerHost string, redisClient *redis.Client) *Daemon {
+
+	engine := gin.Default()
 	if debug {
 		logs.Debug.Println("Initializing daemon in debug mode")
 		gin.SetMode(gin.DebugMode)
+		engine.LoadHTMLFiles("index.html")
+		engine.GET("/", func(c *gin.Context) {
+			c.HTML(200, "index.html", nil)
+		})
 	} else {
 		gin.SetMode(gin.ReleaseMode)
 	}
-	engine := gin.Default()
+
 	cron := cron.New()
 	intools.Engine = &intools.IntoolsEngineImpl{dockerClient, dockerHost, redisClient, cron}
 	daemon := &Daemon{port, engine, debug}
@@ -43,6 +50,7 @@ func (d *Daemon) Run() {
 }
 
 func (d *Daemon) SetRoutes() {
+	d.Engine.GET("/websocket", websocket.GetWS)
     d.Engine.GET("/debug/vars", expvar.Handler())
 	d.Engine.GET("/groups", groups.ControllerGetGroups)
 
