@@ -2,11 +2,11 @@ package connectors
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/fsamin/intools-engine/common/logs"
 	"github.com/fsamin/intools-engine/executors"
 	"github.com/fsamin/intools-engine/intools"
-	"errors"
 )
 
 func GetRedisConnectorsKey(c *Connector) string {
@@ -22,7 +22,7 @@ func GetRedisrKey(g string, c string) string {
 }
 
 func GetRedisConnectorConfKey(g string, c string) string {
-    return GetRedisrKey(g, c) + ":conf"
+	return GetRedisrKey(g, c) + ":conf"
 }
 
 func RedisGetConnectors(group string) ([]string, error) {
@@ -36,7 +36,7 @@ func RedisGetConnectors(group string) ([]string, error) {
 }
 
 func RedisGetConnector(group string, connector string) (*Connector, error) {
-    r := intools.Engine.GetRedisClient()
+	r := intools.Engine.GetRedisClient()
 	logs.Debug.Printf("Loading %s:%s from redis", group, connector)
 	key := GetRedisConnectorConfKey(group, connector)
 	cmd := r.Get(key)
@@ -79,8 +79,8 @@ func GetRedisResultKey(c *Connector, e *executors.Executor) string {
 }
 
 func RedisSaveExecutor(c *Connector, exec *executors.Executor) error {
-    r := intools.Engine.GetRedisClient()
-    logs.Debug.Printf("Saving %s:%s to redis", c.GetContainerName(), exec.ContainerId)
+	r := intools.Engine.GetRedisClient()
+	logs.Debug.Printf("Saving %s:%s to redis", c.GetContainerName(), exec.ContainerId)
 	cmd := r.LPush(GetRedisExecutorKey(c), exec.GetJSON())
 	if exec.Valid {
 		_ = r.LPush(GetRedisResultKey(c, exec), exec.GetResult())
@@ -89,8 +89,8 @@ func RedisSaveExecutor(c *Connector, exec *executors.Executor) error {
 }
 
 func RedisGetLastExecutor(c *Connector) (string, error) {
-    r := intools.Engine.GetRedisClient()
-    cmd := r.LIndex(GetRedisExecutorKey(c), 0)
+	r := intools.Engine.GetRedisClient()
+	cmd := r.LIndex(GetRedisExecutorKey(c), 0)
 	if cmd.Err() != nil {
 		return "", cmd.Err()
 	}

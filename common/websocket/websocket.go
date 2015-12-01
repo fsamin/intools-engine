@@ -28,8 +28,8 @@ type AppClient struct {
 }
 
 type Message struct {
-	Command string                 `json:"Command"`
-	Data    map[string]interface{} `json:"data"`
+	Key  string                 `json:"key"`
+	Data map[string]interface{} `json:"data"`
 }
 
 // Registers the connection from to the intools engine
@@ -50,8 +50,8 @@ func (appClient *AppClient) Register(conn *websocket.Conn) {
 
 	// Send ack
 	message := Message{
-		Command: "connected",
-		Data:    nil,
+		Key:  "connected",
+		Data: nil,
 	}
 	conn.WriteJSON(message)
 
@@ -75,7 +75,7 @@ Events:
 
 		logs.Debug.Printf("Message %v", message)
 
-		switch message.Command {
+		switch message.Key {
 		case "register-group":
 			// Handles group registering for the client
 			client.GroupIds = append(client.GroupIds, message.Data["groupId"].(string))
@@ -93,7 +93,7 @@ Events:
 }
 
 // Broadcasts the value to all client registred to the group
-func Notify(groupId string, value *map[string]interface{}) {
+func Notify(groupId string, connectorId string, value *map[string]interface{}) {
 	logs.Debug.Printf("Notify all client registred to groupid %s , with value %v", groupId, value)
 
 	logs.Debug.Printf("clients %v \n", appclient.Clients)
@@ -102,12 +102,12 @@ func Notify(groupId string, value *map[string]interface{}) {
 
 		if utils.Contains(client.GroupIds, groupId) {
 			data := map[string]interface{}{
-				"groupId": groupId,
-				"value":   value,
+				"connectorId": connectorId,
+				"value":       value,
 			}
 			message := Message{
-				Command: "connector-value",
-				Data:    data,
+				Key:  "connector-value",
+				Data: data,
 			}
 			logs.Debug.Printf("Notifying client %p with message %s", client, message)
 			client.Socket.WriteJSON(message)

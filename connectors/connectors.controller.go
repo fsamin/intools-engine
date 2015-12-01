@@ -1,8 +1,8 @@
 package connectors
 
 import (
-	"github.com/gin-gonic/gin"
 	"github.com/fsamin/intools-engine/common/logs"
+	"github.com/gin-gonic/gin"
 )
 
 func ControllerGetConnectors(c *gin.Context) {

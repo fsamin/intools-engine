@@ -2,9 +2,9 @@ package connectors
 
 import (
 	"encoding/json"
-	"github.com/samalba/dockerclient"
 	"github.com/fsamin/intools-engine/common/logs"
 	"github.com/fsamin/intools-engine/executors"
+	"github.com/samalba/dockerclient"
 )
 
 type Connector struct {
