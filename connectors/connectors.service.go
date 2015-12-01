@@ -3,12 +3,12 @@ package connectors
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/samalba/dockerclient"
 	"github.com/fsamin/intools-engine/common/logs"
 	"github.com/fsamin/intools-engine/common/utils"
+	"github.com/fsamin/intools-engine/common/websocket"
 	"github.com/fsamin/intools-engine/executors"
 	"github.com/fsamin/intools-engine/intools"
-	"github.com/fsamin/intools-engine/common/websocket"
+	"github.com/samalba/dockerclient"
 	"sync"
 	"time"
 )
@@ -164,7 +164,7 @@ func Exec(connector *Connector) (*executors.Executor, error) {
 	}
 
 	// Broadcast result to registered clients
-	websocket.Notify(connector.Group, executor.JsonStdout)
+	websocket.Notify(connector.Group, connector.Name, executor.JsonStdout)
 
 	//Save result to redis
 	defer SaveExecutor(connector, executor)
