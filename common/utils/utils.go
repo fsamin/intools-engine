@@ -62,7 +62,7 @@ func GetRedis(c *cli.Context) (*redis.Client, error) {
 		DB:       int64(c.GlobalInt("redis-db")),
 	}
 
-	client, err  := GetRedisClient()
+	client, err := GetRedisClient()
 
 	logs.Trace.Printf("Connected to Redis Host %s/%d", c.GlobalString("redis"), c.GlobalInt("redis-db"))
 	return client, err
@@ -148,12 +148,12 @@ func Contains(slice []string, item string) bool {
 	return ok
 }
 
-func IndexOf(slice []string, item string) int {
-	r := -1
+func IndexOf(slice []string, item string) (ind int, ok bool) {
+	ind = -1
 	for i, str := range slice {
 		if str == item {
-			r = i
+			return i, true
 		}
 	}
-	return r
+	return ind, false
 }

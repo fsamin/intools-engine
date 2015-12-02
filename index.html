@@ -10,6 +10,8 @@
     <pre id="output2"></pre>
 
     <script>
+      // Launched only in debug
+
       url = 'ws://localhost:8082/websocket';
 
       // Websocket 1
@@ -21,7 +23,7 @@
       }
 
       unregister = function (){
-        send("{\"command\":\"unregister-group\",\"data\":{\"groupId\" : \"CDK\"}}")
+        send("{\"key\":\"unregister-group\",\"data\":{\"groupId\" : \"55ad0bdc1d41c80f88000001\"}}")
       }
 
       c.onmessage = function(msg){
@@ -30,10 +32,10 @@
       }
 
       c.onopen = function(){
-        send("{\"command\":\"register-group\",\"data\":{\"groupId\" : \"CDK\"}}")
-        send("{\"command\":\"register-group\",\"data\":{\"groupId\" : \"Machin\"}}")
+        send("{\"key\":\"register-group\",\"data\":{\"groupId\" : \"55ad0bdc1d41c80f88000001\"}}")
+        send("{\"key\":\"register-group\",\"data\":{\"groupId\" : \"Machin\"}}")
 
-        setTimeout(unregister, 15000)
+        setTimeout(unregister, 30000)
       }
 
     </script>

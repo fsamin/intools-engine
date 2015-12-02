@@ -15,6 +15,15 @@ func GetGroup(name string, withConnectors bool) *Group {
 	return nil
 }
 
+func GetGroupsLength() int64 {
+	length, err := RedisGetLength()
+	if err != nil {
+		logs.Error.Printf("Error while getting groups length from Redis %s", err.Error())
+		return 0
+	}
+	return length
+}
+
 func GetGroups(withConnectors bool) []Group {
 	groups, err := RedisGetGroups()
 	if err != nil {
