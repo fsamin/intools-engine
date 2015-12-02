@@ -7,6 +7,10 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+const (
+	defaultChannelLength = 10
+)
+
 var (
 	appclient = &AppClient{
 		Clients: make(map[*websocket.Conn]*Client),
@@ -40,7 +44,7 @@ type Message struct {
 
 func InitChannel(length int64) {
 	if length <= 0 {
-		length = 10
+		length = defaultChannelLength
 	}
 	ConnectorBuffer = make(chan *LightConnector, length)
 	logs.Trace.Printf("Initializing websocket buffered channel with a size of %+v", length)
@@ -85,7 +89,7 @@ func (appClient *AppClient) Register(conn *websocket.Conn) error {
 
 	logs.Trace.Printf("Client %v registered", client)
 
-	appclient.handleEvents(conn, &client)
+	err = appclient.handleEvents(conn, &client)
 	if err != nil {
 		return err
 	}
