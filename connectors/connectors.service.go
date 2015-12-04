@@ -164,7 +164,12 @@ func Exec(connector *Connector) (*executors.Executor, error) {
 	}
 
 	// Broadcast result to registered clients
-	websocket.Notify(connector.Group, connector.Name, executor.JsonStdout)
+	lightConnector := &websocket.LightConnector{
+		GroupId:     connector.Group,
+		ConnectorId: connector.Name,
+		Value:       executor.JsonStdout,
+	}
+	websocket.ConnectorBuffer <- lightConnector
 
 	//Save result to redis
 	defer SaveExecutor(connector, executor)

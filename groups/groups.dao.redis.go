@@ -12,6 +12,15 @@ func GetRedisGroupKey(group string) string {
 	return "intools:groups:" + group
 }
 
+func RedisGetLength() (int64, error) {
+	r := intools.Engine.GetRedisClient()
+	len, err := r.LLen(GetRedisGroupsKey()).Result()
+	if err != nil {
+		return 0, err
+	}
+	return len, nil
+}
+
 func RedisGetGroups() ([]string, error) {
 	r := intools.Engine.GetRedisClient()
 	len, err := r.LLen(GetRedisGroupsKey()).Result()

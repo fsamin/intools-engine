@@ -2,17 +2,17 @@ package server
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/robfig/cron"
-	"github.com/samalba/dockerclient"
 	"github.com/fsamin/intools-engine/common/logs"
+	"github.com/fsamin/intools-engine/common/websocket"
 	"github.com/fsamin/intools-engine/connectors"
 	"github.com/fsamin/intools-engine/groups"
 	"github.com/fsamin/intools-engine/intools"
-	"github.com/fsamin/intools-engine/common/websocket"
+	"github.com/gin-gonic/gin"
+	"github.com/robfig/cron"
+	"github.com/samalba/dockerclient"
 	"gopkg.in/redis.v3"
 
-    "github.com/gin-gonic/contrib/expvar"
+	"github.com/gin-gonic/contrib/expvar"
 )
 
 type Daemon struct {
@@ -38,6 +38,9 @@ func NewDaemon(port int, debug bool, dockerClient *dockerclient.DockerClient, do
 	cron := cron.New()
 	intools.Engine = &intools.IntoolsEngineImpl{dockerClient, dockerHost, redisClient, cron}
 	daemon := &Daemon{port, engine, debug}
+
+	length := groups.GetGroupsLength()
+	websocket.InitChannel(length)
 	return daemon
 }
 
@@ -51,7 +54,7 @@ func (d *Daemon) Run() {
 
 func (d *Daemon) SetRoutes() {
 	d.Engine.GET("/websocket", websocket.GetWS)
-    d.Engine.GET("/debug/vars", expvar.Handler())
+	d.Engine.GET("/debug/vars", expvar.Handler())
 	d.Engine.GET("/groups", groups.ControllerGetGroups)
 
 	allGroupRouter := d.Engine.Group("/groups/")
