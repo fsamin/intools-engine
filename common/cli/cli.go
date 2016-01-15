@@ -45,6 +45,30 @@ func NewApp() *cli.App {
 			Usage:  "Debug mode",
 			EnvVar: "INTOOLS_DEBUG",
 		},
+		cli.StringFlag{
+			Name:   "registry-username",
+			Usage:  "Docker Registry Username",
+			Value:  "",
+			EnvVar: "DOCKER_REGISTRY_USER",
+		},
+		cli.StringFlag{
+			Name:   "registry-password",
+			Usage:  "Docker Registry Password",
+			Value:  "",
+			EnvVar: "DOCKER_REGISTRY_PWD",
+		},
+		cli.StringFlag{
+			Name:   "registry-mail",
+			Usage:  "Docker Registry Mail",
+			Value:  "",
+			EnvVar: "DOCKER_REGISTRY_MAIL",
+		},
+		cli.StringFlag{
+			Name:   "registry-token",
+			Usage:  "Docker Registry Token",
+			Value:  "",
+			EnvVar: "DOCKER_REGISTRY_TOKEN",
+		},
 	}
 	app.Commands = []cli.Command{
 		cli.Command{

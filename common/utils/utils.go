@@ -68,6 +68,19 @@ func GetRedis(c *cli.Context) (*redis.Client, error) {
 	return client, err
 }
 
+func GetDockerAuth(c *cli.Context) (*dockerclient.AuthConfig) {
+	auth := &dockerclient.AuthConfig{
+		c.GlobalString("registry-username"),
+		c.GlobalString("registry-password"),
+		c.GlobalString("registry-mail"),
+		c.GlobalString("registry-token"),
+	}
+
+	logs.Trace.Printf("Authentication for docker registry: %v", auth)
+	return auth
+}
+
+
 func GetRedisClient() (*redis.Client, error) {
 	client := redis.NewClient(redisOptions)
 

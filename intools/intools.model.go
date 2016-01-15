@@ -13,6 +13,7 @@ type IntoolsEngine interface {
 	GetDockerHost() string
 	GetRedisClient() RedisWrapper
 	GetCron() CronWrapper
+  GetDockerAuth() *dockerclient.AuthConfig
 }
 
 type CronWrapper interface {
@@ -105,24 +106,24 @@ type RedisWrapper interface {
 	LLen(key string) *IntCmd
 	LPop(key string) *StringCmd
 	LPush(key string, values ...string) *IntCmd
-	LPushX(key, value string) *IntCmd
+	LPushX(key, value interface{}) *IntCmd
 	LRange(key string, start, stop int64) *StringSliceCmd
-	LRem(key string, count int64, value string) *IntCmd
-	LSet(key string, index int64, value string) *StatusCmd
+	LRem(key string, count int64, value interface{}) *IntCmd
+	LSet(key string, index int64, value interface{}) *StatusCmd
 	LTrim(key string, start, stop int64) *StatusCmd
 	RPop(key string) *StringCmd
 	RPopLPush(source, destination string) *StringCmd
 	RPush(key string, values ...string) *IntCmd
-	RPushX(key string, value string) *IntCmd
+	RPushX(key string, value interface{}) *IntCmd
 	SAdd(key string, members ...string) *IntCmd
 	SCard(key string) *IntCmd
 	SDiff(keys ...string) *StringSliceCmd
 	SDiffStore(destination string, keys ...string) *IntCmd
 	SInter(keys ...string) *StringSliceCmd
 	SInterStore(destination string, keys ...string) *IntCmd
-	SIsMember(key, member string) *BoolCmd
+	SIsMember(key string, member interface{}) *BoolCmd
 	SMembers(key string) *StringSliceCmd
-	SMove(source, destination, member string) *BoolCmd
+	SMove(source, destination string, member interface{}) *BoolCmd
 	SPop(key string) *StringCmd
 	SRandMember(key string) *StringCmd
 	SRem(key string, members ...string) *IntCmd
@@ -194,6 +195,7 @@ type IntoolsEngineImpl struct {
 	DockerHost   string
 	RedisClient  RedisWrapper
 	Cron         CronWrapper
+  Auth         *dockerclient.AuthConfig
 }
 
 func (e *IntoolsEngineImpl) GetDockerClient() dockerclient.Client {
@@ -218,6 +220,10 @@ func (e *IntoolsEngineImpl) GetRedisClient() RedisWrapper {
 
 func (e *IntoolsEngineImpl) GetCron() CronWrapper {
 	return e.Cron
+}
+
+func (e *IntoolsEngineImpl) GetDockerAuth() *dockerclient.AuthConfig  {
+	return e.Auth
 }
 
 var (

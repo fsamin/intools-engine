@@ -21,7 +21,7 @@ type Daemon struct {
 	DebugMode bool
 }
 
-func NewDaemon(port int, debug bool, dockerClient *dockerclient.DockerClient, dockerHost string, redisClient *redis.Client) *Daemon {
+func NewDaemon(port int, debug bool, dockerClient *dockerclient.DockerClient, dockerHost string, redisClient *redis.Client, auth *dockerclient.AuthConfig) *Daemon {
 
 	engine := gin.Default()
 	if debug {
@@ -36,7 +36,7 @@ func NewDaemon(port int, debug bool, dockerClient *dockerclient.DockerClient, do
 	}
 
 	cron := cron.New()
-	intools.Engine = &intools.IntoolsEngineImpl{dockerClient, dockerHost, redisClient, cron}
+	intools.Engine = &intools.IntoolsEngineImpl{dockerClient, dockerHost, redisClient, cron, auth}
 	daemon := &Daemon{port, engine, debug}
 
 	length := groups.GetGroupsLength()

@@ -97,24 +97,24 @@ func (r *RedisClientMock) LInsert(key, op, pivot, value string) *IntCmd         
 func (r *RedisClientMock) LLen(key string) *IntCmd                                        { return nil }
 func (r *RedisClientMock) LPop(key string) *StringCmd                                     { return nil }
 func (r *RedisClientMock) LPush(key string, values ...string) *IntCmd                     { return nil }
-func (r *RedisClientMock) LPushX(key, value string) *IntCmd                               { return nil }
+func (r *RedisClientMock) LPushX(key, value interface{}) *IntCmd                               { return nil }
 func (r *RedisClientMock) LRange(key string, start, stop int64) *StringSliceCmd           { return nil }
-func (r *RedisClientMock) LRem(key string, count int64, value string) *IntCmd             { return nil }
-func (r *RedisClientMock) LSet(key string, index int64, value string) *StatusCmd          { return nil }
+func (r *RedisClientMock) LRem(key string, count int64, value interface{}) *IntCmd             { return nil }
+func (r *RedisClientMock) LSet(key string, index int64, value interface{}) *StatusCmd          { return nil }
 func (r *RedisClientMock) LTrim(key string, start, stop int64) *StatusCmd                 { return nil }
 func (r *RedisClientMock) RPop(key string) *StringCmd                                     { return nil }
 func (r *RedisClientMock) RPopLPush(source, destination string) *StringCmd                { return nil }
 func (r *RedisClientMock) RPush(key string, values ...string) *IntCmd                     { return nil }
-func (r *RedisClientMock) RPushX(key string, value string) *IntCmd                        { return nil }
+func (r *RedisClientMock) RPushX(key string, value interface{}) *IntCmd                        { return nil }
 func (r *RedisClientMock) SAdd(key string, members ...string) *IntCmd                     { return nil }
 func (r *RedisClientMock) SCard(key string) *IntCmd                                       { return nil }
 func (r *RedisClientMock) SDiff(keys ...string) *StringSliceCmd                           { return nil }
 func (r *RedisClientMock) SDiffStore(destination string, keys ...string) *IntCmd          { return nil }
 func (r *RedisClientMock) SInter(keys ...string) *StringSliceCmd                          { return nil }
 func (r *RedisClientMock) SInterStore(destination string, keys ...string) *IntCmd         { return nil }
-func (r *RedisClientMock) SIsMember(key, member string) *BoolCmd                          { return nil }
+func (r *RedisClientMock) SIsMember(key string, member interface{}) *BoolCmd                          { return nil }
 func (r *RedisClientMock) SMembers(key string) *StringSliceCmd                            { return nil }
-func (r *RedisClientMock) SMove(source, destination, member string) *BoolCmd              { return nil }
+func (r *RedisClientMock) SMove(source, destination string, member interface{}) *BoolCmd              { return nil }
 func (r *RedisClientMock) SPop(key string) *StringCmd                                     { return nil }
 func (r *RedisClientMock) SRandMember(key string) *StringCmd                              { return nil }
 func (r *RedisClientMock) SRem(key string, members ...string) *IntCmd                     { return nil }

@@ -58,7 +58,8 @@ func Exec(connector *Connector) (*executors.Executor, error) {
 	}
 
 	//Create container
-	ContainerId, err := intools.Engine.GetDockerClient().CreateContainer(connector.ContainerConfig, connector.GetContainerName())
+	logs.Debug.Println("ContainerConfig ", connector.ContainerConfig)
+	ContainerId, err := intools.Engine.GetDockerClient().CreateContainer(connector.ContainerConfig, connector.GetContainerName(), intools.Engine.GetDockerAuth())
 	if err != nil {
 		logs.Error.Println("Cannot create container " + connector.GetContainerName())
 		logs.Error.Println(err)

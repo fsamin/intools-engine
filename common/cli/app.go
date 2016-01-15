@@ -35,6 +35,8 @@ func daemonAction(c *cli.Context) {
 	debug := c.GlobalBool("debug")
 	logs.Trace.Println("Starting Intools-Engine as daemon")
 
+	auth := utils.GetDockerAuth(c)
+
 	dockerClient, dockerHost, err := utils.GetDockerCient(c)
 	if err != nil {
 		os.Exit(1)
@@ -45,7 +47,7 @@ func daemonAction(c *cli.Context) {
 		os.Exit(1)
 	}
 
-	d := server.NewDaemon(port, debug, dockerClient, dockerHost, redisClient)
+	d := server.NewDaemon(port, debug, dockerClient, dockerHost, redisClient, auth)
 	d.SetRoutes()
 	d.Run()
 }
@@ -80,9 +82,12 @@ func runAction(c *cli.Context) {
 		os.Exit(2)
 	}
 	cmd = cmd[4:]
+
+	auth := utils.GetDockerAuth(c)
+
 	logs.Debug.Println("Launching " + image + " " + strings.Join(cmd, " "))
 	logs.Warning.Printf("In command line, connector schedule is not available")
-	intools.Engine = &intools.IntoolsEngineImpl{dockerClient, host, redisClient, nil}
+	intools.Engine = &intools.IntoolsEngineImpl{dockerClient, host, redisClient, nil, auth}
 	connector := connectors.NewConnector(group, conn)
 	connector.Init(image, timeout, 0, cmd)
 	groups.CreateGroup(group)
