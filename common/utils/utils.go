@@ -5,10 +5,6 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"errors"
-	"github.com/codegangsta/cli"
-	"github.com/fsamin/intools-engine/common/logs"
-	"github.com/samalba/dockerclient"
-	"gopkg.in/redis.v3"
 	"io"
 	"io/ioutil"
 	"os"
@@ -16,6 +12,11 @@ import (
 	"strings"
 	"unicode"
 	"unicode/utf8"
+
+	"github.com/codegangsta/cli"
+	"github.com/fsamin/intools-engine/common/logs"
+	"github.com/samalba/dockerclient"
+	"gopkg.in/redis.v3"
 )
 
 var (
@@ -46,7 +47,13 @@ func ReadLogs(reader io.Reader) (string, error) {
 	var text string
 	for scanner.Scan() {
 		logs.Debug.Println(scanner.Text())
-		text += StringTransform(scanner.Text() + "\n")
+		b := []byte(scanner.Text())
+		if len(b) > 7 && b[0] == 1 {
+			finalText := string(b[8:])
+			logs.Debug.Println(finalText)
+			text += StringTransform(finalText)
+		}
+		text += StringTransform("\n")
 	}
 	err := scanner.Err()
 	if err != nil {
@@ -68,18 +75,15 @@ func GetRedis(c *cli.Context) (*redis.Client, error) {
 	return client, err
 }
 
-func GetDockerAuth(c *cli.Context) (*dockerclient.AuthConfig) {
+func GetDockerAuth(c *cli.Context) *dockerclient.AuthConfig {
 	auth := &dockerclient.AuthConfig{
 		c.GlobalString("registry-username"),
 		c.GlobalString("registry-password"),
 		c.GlobalString("registry-mail"),
 		c.GlobalString("registry-token"),
 	}
-
-	logs.Trace.Printf("Authentication for docker registry: %v", auth)
 	return auth
 }
-
 
 func GetRedisClient() (*redis.Client, error) {
 	client := redis.NewClient(redisOptions)
