@@ -89,6 +89,11 @@ func ControllerCreateConnector(c *gin.Context) {
 	conn.Group = group
 	conn.Name = connector
 
+	previousCronId, err := RedisGetConnectorCronId(group, connector)
+	if err == nil {
+		RemoveScheduleJob(previousCronId)
+	}
+
 	SaveConnector(&conn)
 	cronId := InitSchedule(&conn)
 	RedisSaveCronId(&conn, cronId)
