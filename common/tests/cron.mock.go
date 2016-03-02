@@ -1,8 +1,8 @@
 package tests
 
 import (
-	"github.com/robfig/cron"
 	"github.com/stretchr/testify/mock"
+	"gopkg.in/robfig/cron.v2"
 )
 
 type CronMock struct {
@@ -10,14 +10,13 @@ type CronMock struct {
 	jobs map[string]cron.Job
 }
 
-func (c *CronMock) AddFunc(spec string, cmd func()) error {
+func (c *CronMock) AddJob(spec string, cmd cron.Job) error {
 	args := c.Called(spec, cmd)
 	return args.Error(0)
 }
 
-func (c *CronMock) AddJob(spec string, cmd cron.Job) error {
-	args := c.Called(spec, cmd)
-	return args.Error(0)
+func (c *CronMock) Remove(id cron.EntryID) {
+	c.Called(id)
 }
 
 func (c *CronMock) Schedule(schedule cron.Schedule, cmd cron.Job) {

@@ -2,15 +2,16 @@ package server
 
 import (
 	"fmt"
+
 	"github.com/fsamin/intools-engine/common/logs"
 	"github.com/fsamin/intools-engine/common/websocket"
 	"github.com/fsamin/intools-engine/connectors"
 	"github.com/fsamin/intools-engine/groups"
 	"github.com/fsamin/intools-engine/intools"
 	"github.com/gin-gonic/gin"
-	"github.com/robfig/cron"
 	"github.com/samalba/dockerclient"
 	"gopkg.in/redis.v3"
+	"gopkg.in/robfig/cron.v2"
 
 	"github.com/gin-gonic/contrib/expvar"
 )
@@ -72,6 +73,7 @@ func (d *Daemon) SetRoutes() {
 				oneGroupConnectorRouter.GET("", connectors.ControllerGetConnectors)
 				oneGroupConnectorRouter.GET("/:connector", connectors.ControllerGetConnector)
 				oneGroupConnectorRouter.POST("/:connector", connectors.ControllerCreateConnector)
+				oneGroupConnectorRouter.DELETE("/:connector", connectors.ControllerDeleteConnector)
 				oneGroupConnectorRouter.GET("/:connector/refresh", connectors.ControllerExecConnector)
 				oneGroupConnectorRouter.GET("/:connector/result", connectors.ControllerGetConnectorResult)
 				oneGroupConnectorRouter.GET("/:connector/exec", connectors.ControllerGetConnectorExecutor)

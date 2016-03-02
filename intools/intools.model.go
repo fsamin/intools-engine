@@ -1,11 +1,12 @@
 package intools
 
 import (
-    . "gopkg.in/redis.v3"
-    "github.com/robfig/cron"
-	"github.com/samalba/dockerclient"
 	"time"
+
 	"github.com/fsamin/intools-engine/common/utils"
+	"github.com/samalba/dockerclient"
+	. "gopkg.in/redis.v3"
+	"gopkg.in/robfig/cron.v2"
 )
 
 type IntoolsEngine interface {
@@ -13,14 +14,14 @@ type IntoolsEngine interface {
 	GetDockerHost() string
 	GetRedisClient() RedisWrapper
 	GetCron() CronWrapper
-  GetDockerAuth() *dockerclient.AuthConfig
+	GetDockerAuth() *dockerclient.AuthConfig
 }
 
 type CronWrapper interface {
-	AddFunc(spec string, cmd func()) error
-	AddJob(spec string, cmd cron.Job) error
-	Schedule(schedule cron.Schedule, cmd cron.Job)
-	Entries() []*cron.Entry
+	Remove(id cron.EntryID)
+	AddJob(spec string, cmd cron.Job) (cron.EntryID, error)
+	Schedule(schedule cron.Schedule, cmd cron.Job) cron.EntryID
+	Entries() []cron.Entry
 	Start()
 	Stop()
 }
@@ -195,7 +196,7 @@ type IntoolsEngineImpl struct {
 	DockerHost   string
 	RedisClient  RedisWrapper
 	Cron         CronWrapper
-  Auth         *dockerclient.AuthConfig
+	Auth         *dockerclient.AuthConfig
 }
 
 func (e *IntoolsEngineImpl) GetDockerClient() dockerclient.Client {
@@ -207,7 +208,7 @@ func (e *IntoolsEngineImpl) GetDockerHost() string {
 }
 
 func (e *IntoolsEngineImpl) GetRedisClient() RedisWrapper {
-	pong,_ := e.RedisClient.Ping().Result()
+	pong, _ := e.RedisClient.Ping().Result()
 	if pong != "PONG" {
 		var err error
 		e.RedisClient, err = utils.GetRedisClient()
@@ -222,7 +223,7 @@ func (e *IntoolsEngineImpl) GetCron() CronWrapper {
 	return e.Cron
 }
 
-func (e *IntoolsEngineImpl) GetDockerAuth() *dockerclient.AuthConfig  {
+func (e *IntoolsEngineImpl) GetDockerAuth() *dockerclient.AuthConfig {
 	return e.Auth
 }
 

@@ -9,15 +9,25 @@ import (
 	"github.com/fsamin/intools-engine/executors"
 	"github.com/fsamin/intools-engine/intools"
 	"github.com/samalba/dockerclient"
+	"gopkg.in/robfig/cron.v2"
 	"sync"
 	"time"
 )
 
-func InitSchedule(c *Connector) {
+func InitSchedule(c *Connector) cron.EntryID {
 	if intools.Engine.GetCron() != nil {
 		crontab := fmt.Sprintf("@every %ds", c.Refresh)
 		logs.Debug.Printf("Schedule %s:%s %s", c.Group, c.Name, crontab)
-		intools.Engine.GetCron().AddJob(crontab, c)
+		entryId, _ := intools.Engine.GetCron().AddJob(crontab, c)
+		return entryId
+	}
+	return 0
+}
+
+func RemoveScheduleJob(entryId cron.EntryID) {
+	if intools.Engine.GetCron() != nil {
+		logs.Debug.Printf("Remove schedule job with cronId: %s", entryId)
+		intools.Engine.GetCron().Remove(entryId)
 	}
 }
 

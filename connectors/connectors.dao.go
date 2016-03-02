@@ -20,6 +20,13 @@ func SaveConnector(c *Connector) {
 	}
 }
 
+func RemoveConnector(c *Connector) {
+	err := RedisRemoveConnector(c)
+	if err != nil {
+		logs.Error.Printf("Error while removing from Redis %s", err.Error())
+	}
+}
+
 func GetLastConnectorExecutor(c *Connector) *executors.Executor {
 	sExecutor, err := RedisGetLastExecutor(c)
 	if err != nil {

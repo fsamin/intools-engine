@@ -46,11 +46,9 @@ func ReadLogs(reader io.Reader) (string, error) {
 	scanner := bufio.NewScanner(reader)
 	var text string
 	for scanner.Scan() {
-		logs.Debug.Println(scanner.Text())
 		b := []byte(scanner.Text())
 		if len(b) > 7 && b[0] == 1 {
 			finalText := string(b[8:])
-			logs.Debug.Println(finalText)
 			text += StringTransform(finalText)
 		}
 		text += StringTransform("\n")
@@ -59,6 +57,7 @@ func ReadLogs(reader io.Reader) (string, error) {
 	if err != nil {
 		logs.Error.Println("There was an error with the scanner", err)
 	}
+	logs.Debug.Println(text)
 	return text, err
 }
 

@@ -90,7 +90,27 @@ func ControllerCreateConnector(c *gin.Context) {
 	conn.Name = connector
 
 	SaveConnector(&conn)
-	InitSchedule(&conn)
+	cronId := InitSchedule(&conn)
+	RedisSaveCronId(&conn, cronId)
+
+	c.JSON(200, conn)
+}
+
+func ControllerDeleteConnector(c *gin.Context) {
+	group := c.Param("group")
+	connector := c.Param("connector")
+
+	conn, err := GetConnector(group, connector)
+	if err != nil {
+		c.String(404, err.Error())
+	}
+
+	cronId, err := RedisGetConnectorCronId(group, connector)
+	if err != nil {
+		c.String(404, "Connector not found in cronTab")
+	}
+	RemoveScheduleJob(cronId)
+	RemoveConnector(conn)
 
 	c.JSON(200, conn)
 }

@@ -6,7 +6,7 @@
 ````
 go get -u "github.com/codegangsta/cli"
 go get -u "github.com/gin-gonic/gin"
-go get -u "github.com/robfig/cron"
+go get -u "gopkg.in/robfig/cron.v2"
 go get -u "github.com/samalba/dockerclient"
 go get -u "gopkg.in/redis.v3"
 go get -u github.com/gorilla/websocket
@@ -198,6 +198,11 @@ Post the JSON object as above to create a connector
  GET <host:port>/groups/:group/connectors/:connector
 ````
 Returns the JSON object
+
+- Delete a connector
+````
+DELETE <host:port>/groups/:group/connectors/:connector
+````
 
  - Force a connector refresh
 ````
